@@ -1,0 +1,153 @@
+body {
+  background-color: #000000;
+}
+
+.mapbox {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.configbox {
+  display: block;
+  position: absolute !important;
+  top: 10px;
+  left: 10px;
+  bottom: auto;
+  width: 500px;
+  padding: 10px !important;
+  height: 200px;
+  border-radius: 1rem !important;
+
+  h1 {
+    padding: 5px;
+    float: left;
+  }
+
+  .field.compare-date-input {
+    display: inline-block;
+    margin-left: 5px;
+  }
+}
+
+.ui.two.item.menu {
+  background-color: rgba(51,51,51, 0.3);
+  margin-top: 50px;
+}
+
+.databox {
+  display: block;
+  position: absolute !important;
+  top: 230px;
+  left: 10px;
+  bottom: auto;
+  width: 500px;
+  padding: 10px !important;
+  max-height: calc(100% - 220px);
+  border-radius: 1rem !important;
+
+  .inner-databox {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 480px;
+    max-height: 60vh;
+
+    .ui.checkbox {
+      margin-right: 10px;
+    }
+  }
+
+  h3 {
+    margin-top: 10px;
+  }
+}
+
+.route {
+  width: 2em;
+  height: 2em;
+  font-size: 2em;
+  line-height: 2em;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  margin: .25em;
+  display: inline-block;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &.medium {
+    height: 1.75em;
+    width: 1.75em;
+    font-size: 1.75em;
+    line-height: 1.75em;
+  }
+
+  &.small {
+    height: 1.5em;
+    width: 1.5em;
+    font-size: 1em;
+    line-height: 1.5em;
+  }
+
+  &.train-N, &.train-Q, &.train-R, &.train-W {
+    color: #000000;
+  }
+}
+
+.bullet {
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
+
+  &.train-1, &.train-2, &.train-3 {
+    background-color: #db2828;
+  }
+
+  &.train-4, &.train-5, &.train-6 {
+    background-color: #21ba45;
+  }
+
+  &.train-7 {
+    background-color: #a333c8;
+  }
+
+  &.train-A, &.train-C, &.train-E {
+    background-color: #2185d0;
+  }
+
+  &.train-B, &.train-D, &.train-F, &.train-M {
+    background-color: #f2711c;
+  }
+
+  &.train-G {
+    background-color: #b5cc18;
+  }
+
+  &.train-J, &.train-Z {
+    background-color: #a5673f;
+  }
+
+  &.train-L {
+    background-color: #A0A0A0;
+  }
+
+  &.train-N, &.train-Q, &.train-R, &.train-W {
+    background-color: #fbbd08;
+  }
+
+  &.train-S {
+    background-color: #767676;
+  }
+}
+
+.station-details .top {
+  display: flex;
+
+  h3.ui.header {
+    margin-bottom: 5px;
+  }
+}

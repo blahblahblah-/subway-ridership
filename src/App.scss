@@ -30,6 +30,11 @@ body {
     display: inline-block;
     margin-left: 5px;
   }
+
+  @media only screen and (max-width: 767px) {
+    width: 90%;
+    height: 250px;
+  }
 }
 
 .ui.two.item.menu {
@@ -57,10 +62,18 @@ body {
     .ui.checkbox {
       margin-right: 10px;
     }
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
   }
 
   h3 {
     margin-top: 10px;
+  }
+
+  @media only screen and (max-width: 767px) {
+    top: 270px;
+    width: 90%;
   }
 }
 
@@ -149,5 +162,19 @@ body {
 
   h3.ui.header {
     margin-bottom: 5px;
+  }
+}
+
+.station-list-item {
+  .data {
+    color: #000000;
+
+    &.red {
+      color: #db2828;
+    }
+
+    &.green {
+      color: #21ba45;
+    }
   }
 }

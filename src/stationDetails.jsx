@@ -1,10 +1,10 @@
 import React from 'react';
-import { Header, Label, Button, Icon, Divider } from "semantic-ui-react";
+import { Header, Button, Icon, Divider } from "semantic-ui-react";
 
-import TrainBullet from './trainBullet';
 import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
 import StationDetailsGraph from './stationDetailsGraph';
+import StationRoutes from './stationRoutes';
 
 import stations from './data/stations.json';
 import byComplexId from './data/byComplexId.json';
@@ -25,29 +25,7 @@ class StationDetails extends React.Component {
             <Header as="h3">
               { stations[selectedStation].name }
             </Header>
-            <div className='trains'>
-              { stations[selectedStation].system === 'NYCT' && stations[selectedStation].routes.map((r) => {
-                return (
-                  <TrainBullet name={r} key={r} size='small' />
-                )
-              })}
-              {
-                stations[selectedStation].system === 'SIR' &&
-                <Label color='blue' horizontal>SIR</Label>
-              }
-              {
-                stations[selectedStation].system === 'RIT' &&
-                <Label color='red' horizontal>Roosevelt Island Tramway</Label>
-              }
-              {
-                stations[selectedStation].system === 'JFK' &&
-                <Label color='black' horizontal>AirTrain JFK</Label>
-              }
-              {
-                stations[selectedStation].system === 'PTH' &&
-                <Label color='yellow' horizontal>PATH</Label>
-              }
-             </div>
+            <StationRoutes station={stations[selectedStation]} />
           </div>
         </div>
         <Divider hidden />

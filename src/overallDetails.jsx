@@ -4,6 +4,7 @@ import { Checkbox, Divider, Header } from "semantic-ui-react";
 import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
+import StationList from './stationList';
 
 import overall from './data/overall.json';
 
@@ -22,7 +23,7 @@ class OverallDetails extends React.Component {
   }
 
   render() {
-    const { nyct, sir, rit, pth, jfk, handleToggle, selectedDate, compareWithDate } = this.props;
+    const { nyct, sir, rit, pth, jfk, handleSelectStation, handleToggle, mode, selectedDate, compareWithDate } = this.props;
     return (
       <div>
         <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
@@ -33,6 +34,7 @@ class OverallDetails extends React.Component {
         {
           compareWithDate ? <DetailsCompareDates data={this.combinedDetails()} selectedDate={selectedDate} compareWithDate={compareWithDate} /> : <DetailsDate data={this.combinedDetails()} selectedDate={selectedDate} />
         }
+        <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} handleSelectStation={handleSelectStation} selectedDate={selectedDate} compareWithDate={compareWithDate} />
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>
         </Divider>

@@ -8,14 +8,15 @@ import timestamp from './data/timestamp.json';
 
 class DataBox extends React.Component {
   render() {
-    const { nyct, sir, rit, pth, jfk, handleToggle, selectedStation, selectedDate, compareWithDate, handleBack } = this.props;
+    const { nyct, sir, rit, pth, jfk, handleToggle, handleSelectStation, mode, selectedStation, selectedDate, compareWithDate, handleBack } = this.props;
     return (
       <Segment inverted vertical className="databox">
         <div className='inner-databox'>
           <Segment>
             { selectedStation ?
                 <StationDetails handleBack={handleBack} selectedStation={selectedStation} selectedDate={selectedDate} compareWithDate={compareWithDate}  /> :
-                <OverallDetails nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} selectedDate={selectedDate} compareWithDate={compareWithDate} handleToggle={handleToggle} />
+                <OverallDetails nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedDate={selectedDate} compareWithDate={compareWithDate}
+                  handleSelectStation={handleSelectStation} handleToggle={handleToggle} />
              }
           </Segment>
           <Header inverted as='h5' floated='left' style={{margin: "10px 5px"}}>

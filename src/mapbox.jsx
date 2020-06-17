@@ -201,6 +201,10 @@ class Mapbox extends React.Component {
     this.setState({ selectedStation: null }, this.refreshMap);
   }
 
+  handleSelectStation = (station) => {
+    this.setState({ selectedStation: station }, this.refreshMap);
+  }
+
   render() {
     const { latestDate, selectedDate, selectedStation, mode, compareWithAnotherDate, compareWithDate, nyct, sir, rit, pth, jfk } = this.state;
     return (
@@ -210,7 +214,9 @@ class Mapbox extends React.Component {
         <ConfigBox mode={mode} handleModeClick={this.handleModeClick} latestDate={latestDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate}
           handleDateInputChange={this.handleDateInputChange} />
-        <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} selectedStation={selectedStation} selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle} handleBack={this.handleBack} />
+        <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedStation={selectedStation}
+          selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle}
+          handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} />
       </div>
     )
   }

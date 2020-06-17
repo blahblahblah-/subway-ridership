@@ -36,9 +36,9 @@ class StationList extends React.Component {
     )
   }
 
-  handleClick = (e) => {
+  handleClick = (e, data) => {
     const { handleSelectStation } = this.props;
-    handleSelectStation(e.target.getAttribute('data-station-id'))
+    handleSelectStation(data['data-station-id']);
   }
 
   renderListItems() {
@@ -61,7 +61,7 @@ class StationList extends React.Component {
       const station = obj.id;
       const stationObj = stations[station];
       return (
-        <List.Item key={station} className='station-list-item' onClick={this.handleClick} data-station-id={station}>
+        <List.Item key={station} className='station-list-item' data-station-id={station} onClick={this.handleClick}>
           <List.Content floated='left' className='station-name'>
             <Header as='h5'>
               { stationObj.name }

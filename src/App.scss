@@ -33,7 +33,7 @@ body {
 
   @media only screen and (max-width: 767px) {
     width: 90%;
-    height: 250px;
+    height: 220px;
   }
 }
 
@@ -64,6 +64,7 @@ body {
     }
     @media only screen and (max-width: 767px) {
       width: 100%;
+      max-height: 50vh;
     }
   }
 
@@ -72,7 +73,7 @@ body {
   }
 
   @media only screen and (max-width: 767px) {
-    top: 270px;
+    top: 240px;
     width: 90%;
   }
 }
@@ -176,5 +177,37 @@ body {
     &.green {
       color: #21ba45;
     }
+  }
+
+  h5.ui.header {
+    line-height: 28px;
+  }
+}
+
+.ui.list .item.station-list-item .content.data {
+  line-height: 28px;
+}
+
+.overall-details {
+  .ui.divider.tab-separator {
+    margin-bottom: 0;
+  }
+}
+
+.ui.form .inline.field.date-input .ui.mini.icon.input {
+  @media only screen and (max-width: 767px) {
+    width: 100px;
+  }
+}
+
+.ui.button.mobile-data-box-control {
+  float: right;
+  margin-right: 0;
+  margin-top: 8px;
+}
+
+form.ui.inverted.form {
+  @media only screen and (max-width: 767px) {
+    margin-top: -60px;
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { debounce } from 'lodash';
+import { Responsive } from "semantic-ui-react";
 
 import ConfigBox from './configBox';
 import DataBox from './dataBox';
@@ -30,7 +31,8 @@ class Mapbox extends React.Component {
       sir: false,
       rit: false,
       pth: false,
-      jfk: false
+      jfk: false,
+      isDataBoxVisible: true
     }
 
   }
@@ -69,11 +71,11 @@ class Mapbox extends React.Component {
   }
 
   refreshMap() {
-    const { selectedDate, compareWithAnotherDate, compareWithDate, mode, nyct, sir, rit, pth, jfk } = this.state;
+    const { selectedDate, compareWithAnotherDate, compareWithDate, selectedStation, mode, nyct, sir, rit, pth, jfk } = this.state;
     const dateObj = byDate[selectedDate]
     const compareDateObj = byDate[compareWithDate];
     const filteredStations = Object.keys(stations).filter((s) => dateObj[s]);
-    const systems = {nyct: nyct, sir: sir, rit: rit, pth: pth, jfk: jfk };
+    const systems = {nyct, sir, rit, pth, jfk };
     const visibleSystems = ['BLAH']; // There needs to be at least one value in the filter, or else Mapbox would just ignore it completely
 
     const geoJson = {
@@ -162,10 +164,18 @@ class Mapbox extends React.Component {
     this.map.on('mouseleave', 'data', () => {
       this.map.getCanvas().style.cursor = '';
     });
+
+    if (selectedStation) {
+      this.map.easeTo({
+        center: stations[selectedStation].coordinates,
+        zoom: 15,
+        bearing: 29,
+      });
+    }
   }
 
   debounceSelectStation = debounce((station) => {
-    this.setState({ selectedStation: station }, this.refreshMap);
+    this.setState({ selectedStation: station, isDataBoxVisible: true }, this.refreshMap);
   }, 300, {
     'leading': true,
     'trailing': false
@@ -190,6 +200,10 @@ class Mapbox extends React.Component {
     }
   }
 
+  handleOnUpdate = (e, { width }) => {
+    this.setState({ 'isMobile': width < Responsive.onlyTablet.minWidth });
+  };
+
   handleToggle = (event, {name, value}) => {
     if (this.state.hasOwnProperty(name)) {
       const prevVal = this.state[name];
@@ -205,19 +219,25 @@ class Mapbox extends React.Component {
     this.setState({ selectedStation: station }, this.refreshMap);
   }
 
+  handleToggleDataBox = () => {
+    this.setState({ isDataBoxVisible: !this.state.isDataBoxVisible });
+  }
+
   render() {
-    const { latestDate, selectedDate, selectedStation, mode, compareWithAnotherDate, compareWithDate, nyct, sir, rit, pth, jfk } = this.state;
+    const { isMobile, isDataBoxVisible, latestDate, selectedDate, selectedStation, mode, compareWithAnotherDate, compareWithDate, nyct, sir, rit, pth, jfk } = this.state;
     return (
-      <div>
+      <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
         <div ref={el => this.mapContainer = el} className='mapbox'>
         </div>
-        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} latestDate={latestDate} selectedDate={selectedDate}
-          compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate}
+        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} latestDate={latestDate} selectedDate={selectedDate}
+          compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
           handleDateInputChange={this.handleDateInputChange} />
-        <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedStation={selectedStation}
-          selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle}
-          handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} />
-      </div>
+        { (!isMobile || isDataBoxVisible) &&
+          <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedStation={selectedStation} isMobile={isMobile}
+            selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle}
+            handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} />
+          }
+      </Responsive>
     )
   }
 }

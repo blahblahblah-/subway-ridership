@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Divider, Header } from "semantic-ui-react";
+import { Checkbox, Divider, Header, Tab } from "semantic-ui-react";
 
 import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
@@ -23,22 +23,46 @@ class OverallDetails extends React.Component {
   }
 
   render() {
-    const { nyct, sir, rit, pth, jfk, handleSelectStation, handleToggle, mode, selectedDate, compareWithDate } = this.props;
+    const { nyct, sir, rit, pth, jfk, isMobile, handleSelectStation, handleToggle, mode, selectedDate, compareWithDate } = this.props;
     return (
-      <div>
+      <div className='overall-details'>
         <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
         <Checkbox label='Staten Island Railway' name='sir' checked={sir} onChange={handleToggle} />
         <Checkbox label='Roosevelt Island Tramway' name='rit' checked={rit} onChange={handleToggle} />
         <Checkbox label='PATH' name='pth' checked={pth} onChange={handleToggle} />
         <Checkbox label='AirTrain JFK' name='jfk' checked={jfk} onChange={handleToggle} />
-        {
-          compareWithDate ? <DetailsCompareDates data={this.combinedDetails()} selectedDate={selectedDate} compareWithDate={compareWithDate} /> : <DetailsDate data={this.combinedDetails()} selectedDate={selectedDate} />
-        }
-        <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} handleSelectStation={handleSelectStation} selectedDate={selectedDate} compareWithDate={compareWithDate} />
+        <Divider className='tab-separator' />
+        <Tab menu={{secondary: true, pointing: true}} panes={
+          [
+            {
+              menuItem: 'Overall',
+              render: () => {
+                return (
+                  <Tab.Pane attached={false}>
+                    { compareWithDate ?
+                      <DetailsCompareDates isMobile={isMobile} data={this.combinedDetails()} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
+                      <DetailsDate data={this.combinedDetails()} selectedDate={selectedDate} />
+                    }
+                  </Tab.Pane>
+                )
+              },
+            },
+            {
+              menuItem: 'Stations',
+              render: () => {
+                return (
+                  <Tab.Pane attached={false}>
+                    <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} handleSelectStation={handleSelectStation} selectedDate={selectedDate} compareWithDate={compareWithDate} />
+                  </Tab.Pane>
+                )
+              },
+            },
+          ]
+        }/>
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>
         </Divider>
-        <OverallGraph nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} />
+        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} />
       </div>
     )
   }

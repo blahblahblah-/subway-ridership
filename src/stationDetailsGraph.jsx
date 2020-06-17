@@ -20,6 +20,7 @@ class StationDetailsGraph extends React.Component {
   }
 
   render() {
+    const { isMobile } = this.props;
     const theme = {
       axis: {
         ticks: {
@@ -51,13 +52,13 @@ class StationDetailsGraph extends React.Component {
 
     return (
       <Line
-        width={440}
+        width={isMobile ? 270 : 440}
         height={300}
         margin={{
           top: 0,
           right: 0,
           bottom: 50,
-          left: 50
+          left: isMobile ? 0 : 50
         }}
         data={data}
         enableArea={false}
@@ -74,14 +75,14 @@ class StationDetailsGraph extends React.Component {
         isInteractive={true}
         useMesh={true}
         enableSlices={false}
-        axisBottom={{
+        axisBottom={isMobile ? null : {
           format: '%Y-%m-%d',
           orient: "bottom",
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
         }}
-        axisLeft={{
+        axisLeft={ isMobile ? null : {
           orient: "left",
           tickSize: 5,
           tickPadding: 5,

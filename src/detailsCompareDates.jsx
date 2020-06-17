@@ -3,7 +3,7 @@ import { Statistic, Divider, Header } from "semantic-ui-react";
 
 class DetailsCompareDates extends React.Component {
   render() {
-    const { data, selectedDate, compareWithDate } = this.props;
+    const { isMobile, data, selectedDate, compareWithDate } = this.props;
     const compareWithEntries = data[compareWithDate].entries;
     const selectedEntries = data[selectedDate].entries;
     const entriesChange = (selectedEntries - compareWithEntries) / compareWithEntries * 100;
@@ -15,7 +15,7 @@ class DetailsCompareDates extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Entries</Header>
         </Divider>
-        <Statistic.Group widths={3} size="tiny">
+        <Statistic.Group widths={isMobile ? 2 : 3} size={ isMobile ? 'mini' : 'tiny'}>
           <Statistic>
             <Statistic.Value>{ compareWithEntries.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ compareWithDate }</Statistic.Label>
@@ -32,7 +32,7 @@ class DetailsCompareDates extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Exits</Header>
         </Divider>
-        <Statistic.Group widths={3} size="tiny">
+        <Statistic.Group widths={isMobile ? 2 : 3} size={ isMobile ? 'mini' : 'tiny'}>
           <Statistic>
             <Statistic.Value>{ compareWithExits.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ compareWithDate }</Statistic.Label>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, Form, Menu, Checkbox, Divider } from "semantic-ui-react";
+import { Segment, Header, Form, Menu, Checkbox, Divider, Button, Icon } from "semantic-ui-react";
 import { DateInput } from 'semantic-ui-calendar-react';
 
 const significantDates = [
@@ -13,11 +13,12 @@ const significantDates = [
 
 class ConfigBox extends React.Component {
   render() {
-    const { mode, handleModeClick, latestDate, selectedDate, compareWithAnotherDate, handleToggle, compareWithDate, handleDateInputChange } = this.props;
+    const { mode, isMobile, handleModeClick, latestDate, selectedDate, compareWithAnotherDate, handleToggle, compareWithDate,
+       handleDateInputChange, handleToggleDataBox } = this.props;
     return (
       <Segment inverted vertical className="configbox">
         <div>
-          <Header inverted as='h1' color='blue'>
+          <Header inverted as={isMobile ? 'h3' : 'h1'} color='blue'>
             NYC Subway Ridership
             <Header.Subheader>
               Based on turnstile usage data, updated weekly
@@ -31,6 +32,7 @@ class ConfigBox extends React.Component {
             <Menu.Item name='exits' active={mode === 'exits'} onClick={handleModeClick} />
           </Menu>
           <DateInput
+            className='date-input'
             placeholder='Date'
             closable
             inlineLabel
@@ -49,7 +51,7 @@ class ConfigBox extends React.Component {
           />
           <Checkbox label='Compare with another date' name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
           <DateInput
-            className='compare-date-input'
+            className='date-input compare-date-input'
             placeholder='Compare with Date'
             closable
             inlineLabel
@@ -68,6 +70,13 @@ class ConfigBox extends React.Component {
             size='mini'
           />
         </Form>
+        { isMobile &&
+          <Button icon
+            className="mobile-data-box-control" onClick={handleToggleDataBox}
+            title="Expand/Collapse">
+            <Icon name='sort'/>
+          </Button>
+        }
       </Segment>
     )
   }

@@ -11,7 +11,7 @@ import byComplexId from './data/byComplexId.json';
 
 class StationDetails extends React.Component {
   render() {
-    const { selectedStation, handleBack, selectedDate, compareWithDate } = this.props;
+    const { isMobile, selectedStation, handleBack, selectedDate, compareWithDate } = this.props;
     const complexData = byComplexId[selectedStation];
     return (
       <div className='station-details'>
@@ -30,12 +30,14 @@ class StationDetails extends React.Component {
         </div>
         <Divider hidden />
         {
-          compareWithDate ? <DetailsCompareDates data={complexData} selectedDate={selectedDate} compareWithDate={compareWithDate} /> : <DetailsDate data={complexData} selectedDate={selectedDate} />
+          compareWithDate ?
+            <DetailsCompareDates isMobile={isMobile} data={complexData} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
+            <DetailsDate data={complexData} selectedDate={selectedDate} />
         }
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>
         </Divider>
-        <StationDetailsGraph complexData={complexData} />
+        <StationDetailsGraph isMobile={isMobile} complexData={complexData} />
       </div>
     )
   }

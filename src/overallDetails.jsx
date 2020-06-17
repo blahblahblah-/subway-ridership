@@ -23,7 +23,7 @@ class OverallDetails extends React.Component {
   }
 
   render() {
-    const { nyct, sir, rit, pth, jfk, isMobile, handleSelectStation, handleToggle, mode, selectedDate, compareWithDate } = this.props;
+    const { nyct, sir, rit, pth, jfk, isMobile, handleSelectStation, handleToggle, handleGraphClick, mode, selectedDate, compareWithDate } = this.props;
     return (
       <div className='overall-details'>
         <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
@@ -62,7 +62,7 @@ class OverallDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>
         </Divider>
-        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} />
+        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} />
       </div>
     )
   }

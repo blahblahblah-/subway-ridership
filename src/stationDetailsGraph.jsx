@@ -2,6 +2,11 @@ import React from 'react';
 import { Line } from '@nivo/line';
 
 class StationDetailsGraph extends React.Component {
+  handleClick = (point, event) => {
+    const { handleGraphClick } = this.props;
+    handleGraphClick(point.data.xFormatted);
+  }
+
   graphData() {
     const { complexData } = this.props;
 
@@ -117,6 +122,7 @@ class StationDetailsGraph extends React.Component {
           }
         ]}
         theme={theme}
+        onClick={this.handleClick}
       />
     )
   }

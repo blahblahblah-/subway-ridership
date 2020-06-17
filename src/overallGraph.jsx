@@ -4,6 +4,11 @@ import { Line } from '@nivo/line';
 import overall from './data/overall.json';
 
 class OverallGraph extends React.Component {
+  handleClick = (point, event) => {
+    const { handleGraphClick } = this.props;
+    handleGraphClick(point.data.xFormatted);
+  }
+
   graphData() {
     const { nyct, sir, rit, pth, jfk } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
@@ -125,6 +130,7 @@ class OverallGraph extends React.Component {
           }
         ]}
         theme={theme}
+        onClick={this.handleClick}
       />
     )
   }

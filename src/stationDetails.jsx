@@ -11,7 +11,7 @@ import byComplexId from './data/byComplexId.json';
 
 class StationDetails extends React.Component {
   render() {
-    const { isMobile, selectedStation, handleBack, selectedDate, compareWithDate } = this.props;
+    const { isMobile, selectedStation, handleBack, handleGraphClick, selectedDate, compareWithDate } = this.props;
     const complexData = byComplexId[selectedStation];
     return (
       <div className='station-details'>
@@ -37,7 +37,7 @@ class StationDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>
         </Divider>
-        <StationDetailsGraph isMobile={isMobile} complexData={complexData} />
+        <StationDetailsGraph isMobile={isMobile} complexData={complexData} handleGraphClick={handleGraphClick} />
       </div>
     )
   }

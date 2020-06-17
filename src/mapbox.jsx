@@ -223,6 +223,10 @@ class Mapbox extends React.Component {
     this.setState({ isDataBoxVisible: !this.state.isDataBoxVisible });
   }
 
+  handleGraphClick = (date) => {
+    this.setState({ selectedDate: date }, this.refreshMap);
+  }
+
   render() {
     const { isMobile, isDataBoxVisible, latestDate, selectedDate, selectedStation, mode, compareWithAnotherDate, compareWithDate, nyct, sir, rit, pth, jfk } = this.state;
     return (
@@ -235,7 +239,7 @@ class Mapbox extends React.Component {
         { (!isMobile || isDataBoxVisible) &&
           <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedStation={selectedStation} isMobile={isMobile}
             selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle}
-            handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} />
+            handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
           }
       </Responsive>
     )

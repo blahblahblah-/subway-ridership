@@ -9,21 +9,23 @@ import timestamp from './data/timestamp.json';
 class DataBox extends React.Component {
   componentDidUpdate(prevProps) {
     const { selectedDate, selectedStation, compareWithDate } = this.props;
-    if (prevProps.selectedDate !== selectedDate || prevProps.selectedStation !== selectedStation || prevProps.compareWithDate !== compareWithDate) {
+    if (prevProps.selectedStation !== selectedStation || prevProps.compareWithDate !== compareWithDate) {
       this.dataBox.scrollTop = 0;
     }
   }
 
   render() {
-    const { nyct, sir, rit, pth, jfk, isMobile, handleToggle, handleSelectStation, mode, selectedStation, selectedDate, compareWithDate, handleBack } = this.props;
+    const { nyct, sir, rit, pth, jfk, isMobile, handleToggle, handleSelectStation, mode, selectedStation,
+      selectedDate, compareWithDate, handleBack, handleGraphClick } = this.props;
     return (
       <Segment inverted vertical className="databox" onUpdate={this.handleOnUpdate}>
         <div className='inner-databox' ref={el => this.dataBox = el}>
           <Segment>
             { selectedStation ?
-                <StationDetails isMobile={isMobile} handleBack={handleBack} selectedStation={selectedStation} selectedDate={selectedDate} compareWithDate={compareWithDate}  /> :
+                <StationDetails isMobile={isMobile} handleBack={handleBack} selectedStation={selectedStation} selectedDate={selectedDate}
+                  compareWithDate={compareWithDate} handleGraphClick={handleGraphClick} /> :
                 <OverallDetails isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedDate={selectedDate} compareWithDate={compareWithDate}
-                  handleSelectStation={handleSelectStation} handleToggle={handleToggle} />
+                  handleSelectStation={handleSelectStation} handleToggle={handleToggle} handleGraphClick={handleGraphClick} />
              }
           </Segment>
           <Header inverted as='h5' floated='left' style={{margin: "10px 5px"}}>

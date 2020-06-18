@@ -21,7 +21,7 @@ class ConfigBox extends React.Component {
           <Header inverted as={isMobile ? 'h3' : 'h1'} color='blue'>
             NYC Subway Ridership
             <Header.Subheader>
-              Based on turnstile usage data, updated weekly
+              Based on turnstile usage data, updated weekly <a href='https://medium.com/good-service/mapping-nyc-subway-ridership-through-the-pandemic-aed596a36c9e' target='_blank'><Icon name='info circle' link aria-label='info' fitted /></a>
             </Header.Subheader>
           </Header>
         </div>

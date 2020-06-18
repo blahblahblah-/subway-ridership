@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Visualizer of NYC Subway Ridership using turnstile usage data, updated weekly."
+      content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage."
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -15,10 +15,27 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>NYC Subway Ridership</title>
+    <title>NYC Subway Ridership - Based on turnstile usage data, updated weekly</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css' rel='stylesheet' />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-— facebook open graph tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.subwayridership.nyc" />
+    <meta property="og:title" content="NYC Subway Ridership - Based on turnstile usage data, updated weekly" />
+    <meta property="og:description" content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage." />
+    <meta property="og:image" content="<%= require('./screenshot.png') %>" />
+
+    <!-— twitter card tags additive with the og: tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="subwayridership.nyc" />
+    <meta name="twitter:title" content="NYC Subway Ridership - Based on turnstile usage data, updated weekly" />
+    <meta name="twitter:description" content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage." />
+    <meta name="twitter:site" content="@_blahblahblah" />
+    <meta name="twitter:creator" content="@_blahblahblah" />
+    <meta name="twitter:image" content="<%= require('./screenshot.png') %>" />
+    <meta name="twitter:url" content="https://www.subwayridership.nyc" />
+    <link rel="canonical" href="https://www.subwayridership.nyc" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

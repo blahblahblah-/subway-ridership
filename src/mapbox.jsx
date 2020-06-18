@@ -126,7 +126,7 @@ class Mapbox extends React.Component {
       ];
     }
 
-    let circleColorValue = '#2185d0';
+    let circleColorValue = '#54c8ff';
 
     if (compareWithAnotherDate) {
       circleColorValue = [

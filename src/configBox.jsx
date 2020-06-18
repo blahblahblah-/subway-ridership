@@ -48,6 +48,7 @@ class ConfigBox extends React.Component {
             markColor='blue'
             popupPosition='bottom center'
             size='mini'
+            hideMobileKeyboard
           />
           <Checkbox label='Compare with another date' name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
           <DateInput
@@ -68,6 +69,7 @@ class ConfigBox extends React.Component {
             popupPosition='bottom center'
             disabled={!compareWithAnotherDate}
             size='mini'
+            hideMobileKeyboard
           />
         </Form>
         { isMobile &&

@@ -114,15 +114,15 @@ class Mapbox extends React.Component {
 
     let circleRadiusValue = [
       'interpolate', ['linear'], ['zoom'],
-      10, ['max', ['min', ['/', ['get', mode], 5000], 5], 1],
-      14, ['max', ['min', ['/', ['get', mode], 2000], 40], 3]
+      10, ['max', ['min', ['/', ['get', mode], 5000], 5], 3],
+      14, ['max', ['min', ['/', ['get', mode], 2000], 50], 5]
     ];
 
     if (compareWithAnotherDate) {
       circleRadiusValue = [
         'interpolate', ['linear'], ['zoom'],
-        10, ['max', ['min', ['abs', ['/', ['get', mode], 10]], 20], 1],
-        14, ['max', ['min', ['abs', ['/', ['get', mode], 5]], 40], 3]
+        10, ['max', ['min', ['abs', ['/', ['get', mode], 10]], 20], 3],
+        14, ['max', ['min', ['abs', ['/', ['get', mode], 5]], 50], 5]
       ];
     }
 

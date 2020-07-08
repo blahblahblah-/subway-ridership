@@ -8,11 +8,12 @@ import StationRoutes from './stationRoutes';
 
 import stations from './data/stations.json';
 import byComplexId from './data/byComplexId.json';
+import byComplexId2019 from './data/byComplexId_2019.json';
 
 class StationDetails extends React.Component {
   render() {
     const { isMobile, selectedStation, handleBack, handleGraphClick, selectedDate, compareWithDate } = this.props;
-    const complexData = byComplexId[selectedStation];
+    const complexData = Object.assign(Object.assign({}, byComplexId2019[selectedStation]), byComplexId[selectedStation]);
     return (
       <div className='station-details'>
         <div className='top'>

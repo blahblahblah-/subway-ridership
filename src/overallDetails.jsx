@@ -7,6 +7,12 @@ import DetailsCompareDates from './detailsCompareDates';
 import StationList from './stationList';
 
 import overall from './data/overall.json';
+import overall2019 from './data/overall_2019.json';
+
+let overallAll = {};
+['NYCT', 'SIR', 'RIT', 'PTH', 'JFK'].forEach((key) => {
+  overallAll[key] = Object.assign(Object.assign({}, overall2019[key]), overall[key]);
+});
 
 class OverallDetails extends React.Component {
   combinedDetails() {
@@ -16,7 +22,7 @@ class OverallDetails extends React.Component {
     [selectedDate, compareWithDate].filter((date) => date).forEach((date) => {
       results[date] = {};
       ['entries', 'exits'].forEach((field) => {
-        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overall[system][date][field]).reduce((acc, cur) => acc + cur, 0);
+        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overallAll[system] ? overallAll[system][date][field] : 0).reduce((acc, cur) => acc + cur, 0);
       });
     })
     return results;

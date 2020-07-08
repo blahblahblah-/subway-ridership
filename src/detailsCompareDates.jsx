@@ -15,7 +15,7 @@ class DetailsCompareDates extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Entries</Header>
         </Divider>
-        <Statistic.Group widths={isMobile ? 2 : 3} size={ isMobile ? 'mini' : 'tiny'}>
+        <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
           <Statistic>
             <Statistic.Value>{ compareWithEntries.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ compareWithDate }</Statistic.Label>
@@ -32,7 +32,7 @@ class DetailsCompareDates extends React.Component {
         <Divider horizontal>
           <Header size='medium'>Exits</Header>
         </Divider>
-        <Statistic.Group widths={isMobile ? 2 : 3} size={ isMobile ? 'mini' : 'tiny'}>
+        <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
           <Statistic>
             <Statistic.Value>{ compareWithExits.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ compareWithDate }</Statistic.Label>

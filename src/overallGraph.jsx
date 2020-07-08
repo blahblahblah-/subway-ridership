@@ -2,6 +2,12 @@ import React from 'react';
 import { Line } from '@nivo/line';
 
 import overall from './data/overall.json';
+import overall2019 from './data/overall_2019.json';
+
+let overallAll = {};
+['NYCT', 'SIR', 'RIT', 'PTH', 'JFK'].forEach((key) => {
+  overallAll[key] = Object.assign(Object.assign({}, overall2019[key]), overall[key]);
+});
 
 class OverallGraph extends React.Component {
   handleClick = (point, event) => {
@@ -16,7 +22,7 @@ class OverallGraph extends React.Component {
     return Object.keys(settings).filter((system) => {
       return settings[system];
     }).flatMap((system) => {
-      const systemData = overall[system];
+      const systemData = overallAll[system];
       return ["entries", "exits"].map((field) => {
         return {
           'id': `${system} ${field}`,

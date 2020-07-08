@@ -40,7 +40,7 @@ class ConfigBox extends React.Component {
             label='Date'
             name='selectedDate'
             dateFormat='YYYY-MM-DD'
-            minDate='2020-01-01'
+            minDate='2019-01-01'
             maxDate={latestDate}
             value={selectedDate}
             onChange={handleDateInputChange}
@@ -60,7 +60,7 @@ class ConfigBox extends React.Component {
             disable={selectedDate}
             name='compareWithDate'
             dateFormat='YYYY-MM-DD'
-            minDate='2020-01-01'
+            minDate='2019-01-01'
             maxDate={latestDate}
             value={compareWithDate}
             onChange={handleDateInputChange}

@@ -1,22 +1,24 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { debounce } from 'lodash';
-import { Responsive } from "semantic-ui-react";
+import { Responsive } from 'semantic-ui-react';
+import moment from 'moment';
 
 import ConfigBox from './configBox';
 import DataBox from './dataBox';
 
 import byDate from './data/byDate.json';
+import byDate2019 from './data/byDate_2019.json';
 import stations from './data/stations.json';
 
 const center = [-73.9905, 40.73925];
-const defaultCompareWithDate = '2020-03-04';
+const allDates = Object.assign(byDate2019, byDate);
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
 class Mapbox extends React.Component {
   constructor(props) {
-    const dates = Object.keys(byDate);
+    const dates = Object.keys(allDates);
     const lastDate = dates[dates.length - 2];
 
     super(props);
@@ -26,7 +28,7 @@ class Mapbox extends React.Component {
       selectedStation: null,
       mode: 'entries',
       compareWithAnotherDate: false,
-      compareWithDate: defaultCompareWithDate,
+      compareWithDate: moment(lastDate).subtract(1, 'year').format('YYYY-MM-DD'),
       nyct: true,
       sir: false,
       rit: false,
@@ -34,7 +36,6 @@ class Mapbox extends React.Component {
       jfk: false,
       isDataBoxVisible: true
     }
-
   }
 
   componentDidMount() {
@@ -72,8 +73,8 @@ class Mapbox extends React.Component {
 
   refreshMap() {
     const { selectedDate, compareWithAnotherDate, compareWithDate, selectedStation, mode, nyct, sir, rit, pth, jfk } = this.state;
-    const dateObj = byDate[selectedDate]
-    const compareDateObj = byDate[compareWithDate];
+    const dateObj = allDates[selectedDate]
+    const compareDateObj = allDates[compareWithDate];
     const filteredStations = Object.keys(stations).filter((s) => dateObj[s]);
     const systems = {nyct, sir, rit, pth, jfk };
     const visibleSystems = ['BLAH']; // There needs to be at least one value in the filter, or else Mapbox would just ignore it completely
@@ -184,17 +185,19 @@ class Mapbox extends React.Component {
   handleModeClick = (e, { name }) => this.setState({ mode: name }, this.refreshMap);
 
   handleDateInputChange = (event, {name, value}) => {
-    const { compareWithDate } = this.state;
+    const { compareWithDate, compareWithAnotherDate } = this.state;
 
     if (this.state.hasOwnProperty(name) && value) {
       const newState = { [name]: value };
-      if (name === 'selectedDate' && value === compareWithDate) {
-        const newCompareWithDate = new Date(`${compareWithDate}Z-04:00`);
-        newCompareWithDate.setDate(newCompareWithDate.getDate() - 1);
-        if (value === '2020-01-01') {
-          newCompareWithDate.setDate(newCompareWithDate.getDate() + 2);
+      if (!compareWithAnotherDate || (name === 'selectedDate' && value === compareWithDate)) {
+        const newDate = moment(value);
+        let newCompareWithDate
+
+        if (newDate.year() === 2020) {
+          newState['compareWithDate'] = newDate.subtract(1, 'year').format('YYYY-MM-DD');
+        } else {
+          newState['compareWithDate'] = newDate.add(1, 'year').format('YYYY-MM-DD');
         }
-        newState['compareWithDate'] = newCompareWithDate.toISOString().split('T')[0];
       }
       this.setState(newState, this.refreshMap);
     }

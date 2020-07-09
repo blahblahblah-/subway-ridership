@@ -58,11 +58,11 @@ class StationDetailsGraph extends React.Component {
     return (
       <Line
         width={isMobile ? 270 : 440}
-        height={300}
+        height={400}
         margin={{
           top: 0,
           right: 0,
-          bottom: 50,
+          bottom: 100,
           left: isMobile ? 0 : 50
         }}
         data={data}
@@ -74,18 +74,19 @@ class StationDetailsGraph extends React.Component {
           precision: 'day',
         }}
         xFormat="time:%Y-%m-%d"
+        yFormat={format}
         enablePoints={false}
         enableGridY={true}
         enableGridX={false}
         isInteractive={true}
         useMesh={true}
         enableSlices={false}
-        axisBottom={isMobile ? null : {
+        axisBottom={{
           format: '%Y-%m-%d',
           orient: "bottom",
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 0,
+          tickRotation: -50,
         }}
         axisLeft={ isMobile ? null : {
           orient: "left",
@@ -100,7 +101,7 @@ class StationDetailsGraph extends React.Component {
             direction: "row",
             justify: false,
             translateX: 0,
-            translateY: 50,
+            translateY: 100,
             itemsSpacing: 50,
             itemDirection: "left-to-right",
             itemWidth: 80,

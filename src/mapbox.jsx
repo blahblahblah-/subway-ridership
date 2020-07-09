@@ -13,14 +13,13 @@ import stations from './data/stations.json';
 
 const center = [-73.9905, 40.73925];
 const allDates = Object.assign(byDate2019, byDate);
+const dates = Object.keys(allDates);
+const lastDate = dates[dates.length - 2];
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
 class Mapbox extends React.Component {
   constructor(props) {
-    const dates = Object.keys(allDates);
-    const lastDate = dates[dates.length - 2];
-
     super(props);
     this.state = {
       latestDate: lastDate,
@@ -28,7 +27,7 @@ class Mapbox extends React.Component {
       selectedStation: null,
       mode: 'entries',
       compareWithAnotherDate: false,
-      compareWithDate: moment(lastDate).subtract(1, 'year').format('YYYY-MM-DD'),
+      compareWithDate: moment(lastDate).subtract(52, 'week').format('YYYY-MM-DD'),
       nyct: true,
       sir: false,
       rit: false,
@@ -189,14 +188,16 @@ class Mapbox extends React.Component {
 
     if (this.state.hasOwnProperty(name) && value) {
       const newState = { [name]: value };
-      if (!compareWithAnotherDate || (name === 'selectedDate' && value === compareWithDate)) {
+      if (name === 'selectedDate' || value === compareWithDate) {
         const newDate = moment(value);
-        let newCompareWithDate
+        const nextYearToday = newDate.clone().add(52, 'week');
 
         if (newDate.year() === 2020) {
-          newState['compareWithDate'] = newDate.subtract(1, 'year').format('YYYY-MM-DD');
-        } else {
-          newState['compareWithDate'] = newDate.add(1, 'year').format('YYYY-MM-DD');
+          newState['compareWithDate'] = newDate.subtract(52, 'week').format('YYYY-MM-DD');
+        } else if (nextYearToday <= moment(lastDate)) {
+          newState['compareWithDate'] = newDate.add(52, 'week').format('YYYY-MM-DD');
+        } else if (value === compareWithDate) {
+          newState['compareWithDate'] = newDate.add(1, 'day').format('YYYY-MM-DD');
         }
       }
       this.setState(newState, this.refreshMap);
@@ -227,7 +228,19 @@ class Mapbox extends React.Component {
   }
 
   handleGraphClick = (date) => {
-    this.setState({ selectedDate: date }, this.refreshMap);
+    const { compareWithDate } = this.state;
+    const newState = { selectedDate: date };
+    const newDate = moment(date);
+    const nextYearToday = newDate.clone().add(52, 'week');
+
+    if (newDate.year() === 2020) {
+      newState['compareWithDate'] = newDate.subtract(52, 'week').format('YYYY-MM-DD');
+    } else if (nextYearToday <= moment(lastDate)) {
+      newState['compareWithDate'] = newDate.add(52, 'week').format('YYYY-MM-DD');
+    } else if (date === compareWithDate) {
+      newState['compareWithDate'] = newDate.add(1, 'day').format('YYYY-MM-DD');
+    }
+    this.setState(newState, this.refreshMap);
   }
 
   render() {

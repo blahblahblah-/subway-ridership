@@ -4,11 +4,6 @@ import { Line } from '@nivo/line';
 import overall from './data/overall.json';
 import overall2019 from './data/overall_2019.json';
 
-let overallAll = {};
-['NYCT', 'SIR', 'RIT', 'PTH', 'JFK'].forEach((key) => {
-  overallAll[key] = Object.assign(Object.assign({}, overall2019[key]), overall[key]);
-});
-
 class OverallGraph extends React.Component {
   handleClick = (point, event) => {
     const { handleGraphClick } = this.props;
@@ -16,13 +11,13 @@ class OverallGraph extends React.Component {
   }
 
   graphData() {
-    const { nyct, sir, rit, pth, jfk } = this.props;
+    const { nyct, sir, rit, pth, jfk, year } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
 
     return Object.keys(settings).filter((system) => {
       return settings[system];
     }).flatMap((system) => {
-      const systemData = overallAll[system];
+      let systemData = (year === 2020) ? overall[system] : overall2019[system];
       return ["entries", "exits"].map((field) => {
         return {
           'id': `${system} ${field}`,
@@ -72,12 +67,12 @@ class OverallGraph extends React.Component {
     return (
       <Line
         width={isMobile ? 270 : 440}
-        height={300}
+        height={400}
         margin={{
           top: 0,
           right: 0,
-          bottom: 50,
-          left: isMobile ? 0 : 50
+          bottom: 100,
+          left: isMobile ? 0 : 60
         }}
         data={data}
         enableArea={false}
@@ -88,22 +83,23 @@ class OverallGraph extends React.Component {
           precision: 'day',
         }}
         xFormat="time:%Y-%m-%d"
+        yFormat={format}
         enablePoints={false}
         enableGridY={true}
         enableGridX={false}
         isInteractive={true}
         useMesh={true}
         enableSlices={false}
-        axisBottom={isMobile ? null : {
+        axisBottom={{
           format: '%Y-%m-%d',
           orient: "bottom",
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 0,
+          tickRotation: -50,
         }}
         axisLeft={isMobile ? null : {
           orient: "left",
-          tickSize: 5,
+          tickSize: 0,
           tickPadding: 5,
           tickRotation: 0,
           format: format,
@@ -114,14 +110,14 @@ class OverallGraph extends React.Component {
             direction: "row",
             justify: false,
             translateX: 0,
-            translateY: 50,
+            translateY: 100,
             itemsSpacing: 10,
             itemDirection: "left-to-right",
-            itemWidth: 80,
+            itemWidth: 70,
             itemHeight: 20,
             itemOpacity: 0.75,
             itemTextColor: "#000000",
-            symbolSize: 12,
+            symbolSize: 5,
             symbolShape: "circle",
             symbolBorderColor: "rgba(0, 0, 0, .5)",
             effects: [

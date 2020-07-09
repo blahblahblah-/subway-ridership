@@ -1,5 +1,6 @@
 import React from 'react';
-import { Checkbox, Divider, Header, Tab } from "semantic-ui-react";
+import { Checkbox, Divider, Header, Tab, Dropdown } from "semantic-ui-react";
+import moment from 'moment';
 
 import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
@@ -13,8 +14,27 @@ let overallAll = {};
 ['NYCT', 'SIR', 'RIT', 'PTH', 'JFK'].forEach((key) => {
   overallAll[key] = Object.assign(Object.assign({}, overall2019[key]), overall[key]);
 });
+const yearOptions = [
+  {key: 2019, text: 2019, value: 2019},
+  {key: 2020, text: 2020, value: 2020},
+]
 
 class OverallDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    const year = moment(props.selectedDate).year();
+
+    this.state = {selectedYear: year};
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedDate } = this.props;
+    if (prevProps.selectedDate !== selectedDate) {
+      const year = moment(selectedDate).year();
+      this.setState({selectedYear: year});
+    }
+  }
+
   combinedDetails() {
     const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
@@ -28,8 +48,11 @@ class OverallDetails extends React.Component {
     return results;
   }
 
+  handleYearChange = (e, { value }) => this.setState({ selectedYear: value });
+
   render() {
     const { nyct, sir, rit, pth, jfk, isMobile, handleSelectStation, handleToggle, handleGraphClick, mode, selectedDate, compareWithDate } = this.props;
+    const { selectedYear } = this.state;
     return (
       <div className='overall-details'>
         <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
@@ -66,9 +89,12 @@ class OverallDetails extends React.Component {
           ]
         }/>
         <Divider horizontal>
-          <Header size='medium'>Daily Counts in 2020</Header>
+          <Header size='medium'>
+            Daily Counts in&nbsp;
+            <Dropdown inline options={yearOptions} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
+          </Header>
         </Divider>
-        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} />
+        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} year={selectedYear} />
       </div>
     )
   }

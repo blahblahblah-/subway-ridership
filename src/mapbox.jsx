@@ -7,14 +7,15 @@ import moment from 'moment';
 import ConfigBox from './configBox';
 import DataBox from './dataBox';
 
-import byDate from './data/byDate.json';
-import byDate2019 from './data/byDate_2019.json';
 import stations from './data/stations.json';
+import overall from './data/overall.json';
 
 const center = [-73.9905, 40.73925];
-const allDates = Object.assign(byDate2019, byDate);
-const dates = Object.keys(allDates);
+const dates = Object.keys(overall['NYCT']).sort();
+const firstDate = dates[0];
 const lastDate = dates[dates.length - 2];
+const firstYear = moment(firstDate).year();
+const lastYear = moment(lastDate).year();
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY;
 
@@ -22,18 +23,21 @@ class Mapbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      latestDate: lastDate,
       selectedDate: lastDate,
+      selectedDateObj: null,
       selectedStation: null,
+      selectedStationObj: null,
       mode: 'entries',
       compareWithAnotherDate: false,
       compareWithDate: moment(lastDate).subtract(52, 'week').format('YYYY-MM-DD'),
+      compareWithDateObj: null,
       nyct: true,
       sir: false,
       rit: false,
       pth: false,
       jfk: false,
-      isDataBoxVisible: true
+      isDataBoxVisible: true,
+      isDataLoaded: false,
     }
   }
 
@@ -71,10 +75,56 @@ class Mapbox extends React.Component {
   }
 
   refreshMap() {
-    const { selectedDate, compareWithAnotherDate, compareWithDate, selectedStation, mode, nyct, sir, rit, pth, jfk } = this.state;
-    const dateObj = allDates[selectedDate]
-    const compareDateObj = allDates[compareWithDate];
-    const filteredStations = Object.keys(stations).filter((s) => dateObj[s]);
+    const { selectedDate, compareWithAnotherDate } = this.state;
+
+    fetch(`dates/${selectedDate}.json`)
+      .then(response => response.json())
+      .then(data => {
+        if (compareWithAnotherDate) {
+          fetch(`dates/${selectedDate}.json`)
+            .then(response => response.json())
+            .then(compareWithData => {
+               this.setState({ selectedDateObj: data, compareWithDateObj: compareWithData, isDataLoaded: true}, this.updateMap);
+            });
+        } else {
+          this.setState({ selectedDateObj: data, compareWithDateObj: null, isDataLoaded: true}, this.updateMap);
+        }
+      });
+  }
+
+  selectStation() {
+    const { selectedStation } = this.state;
+
+    fetch(`complexId/${selectedStation}.json`)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ selectedStationObj: data, isDataLoaded: true}, this.navigateToStation);
+      });
+  }
+
+  navigateToStation() {
+    const { selectedStation } = this.state;
+
+    this.map.easeTo({
+      center: stations[selectedStation].coordinates,
+      zoom: 15,
+      bearing: 29,
+    });
+  }
+
+  updateMap() {
+    const {
+      selectedDateObj,
+      compareWithAnotherDate,
+      compareWithDateObj,
+      mode,
+      nyct,
+      sir,
+      rit,
+      pth,
+      jfk
+    } = this.state;
+    const filteredStations = Object.keys(stations).filter((s) => selectedDateObj[s]);
     const systems = {nyct, sir, rit, pth, jfk };
     const visibleSystems = ['BLAH']; // There needs to be at least one value in the filter, or else Mapbox would just ignore it completely
 
@@ -87,8 +137,8 @@ class Mapbox extends React.Component {
             "type": "Feature",
             "properties": {
               "id": s,
-              "entries": this.getPassengerData(dateObj, compareWithAnotherDate, compareDateObj, "entries", s),
-              "exits": this.getPassengerData(dateObj, compareWithAnotherDate, compareDateObj, "exits", s),
+              "entries": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareWithDateObj, "entries", s),
+              "exits": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareWithDateObj, "exits", s),
               "system": stations[s].system,
             },
             "geometry": {
@@ -164,18 +214,10 @@ class Mapbox extends React.Component {
     this.map.on('mouseleave', 'data', () => {
       this.map.getCanvas().style.cursor = '';
     });
-
-    if (selectedStation) {
-      this.map.easeTo({
-        center: stations[selectedStation].coordinates,
-        zoom: 15,
-        bearing: 29,
-      });
-    }
   }
 
   debounceSelectStation = debounce((station) => {
-    this.setState({ selectedStation: station, isDataBoxVisible: true }, this.refreshMap);
+    this.setState({ selectedStation: station, isDataBoxVisible: true }, this.selectStation);
   }, 300, {
     'leading': true,
     'trailing': false
@@ -184,7 +226,7 @@ class Mapbox extends React.Component {
   handleModeClick = (e, { name }) => this.setState({ mode: name }, this.refreshMap);
 
   handleDateInputChange = (event, {name, value}) => {
-    const { compareWithDate, compareWithAnotherDate } = this.state;
+    const { compareWithDate } = this.state;
 
     if (this.state.hasOwnProperty(name) && value) {
       const newState = { [name]: value };
@@ -192,7 +234,7 @@ class Mapbox extends React.Component {
         const newDate = moment(value);
         const nextYearToday = newDate.clone().add(52, 'week');
 
-        if (newDate.year() === 2020) {
+        if (newDate.year() !== firstYear) {
           newState['compareWithDate'] = newDate.subtract(52, 'week').format('YYYY-MM-DD');
         } else if (nextYearToday <= moment(lastDate)) {
           newState['compareWithDate'] = newDate.add(52, 'week').format('YYYY-MM-DD');
@@ -216,11 +258,14 @@ class Mapbox extends React.Component {
   }
 
   handleBack = () => {
-    this.setState({ selectedStation: null }, this.refreshMap);
+    this.setState({ selectedStation: null });
   }
 
   handleSelectStation = (station) => {
-    this.setState({ selectedStation: station }, this.refreshMap);
+    const { selectedStation } = this.state;
+    if (selectedStation !== station) {
+      this.setState({ selectedStation: station }, this.selectStation);
+    }
   }
 
   handleToggleDataBox = () => {
@@ -244,17 +289,37 @@ class Mapbox extends React.Component {
   }
 
   render() {
-    const { isMobile, isDataBoxVisible, latestDate, selectedDate, selectedStation, mode, compareWithAnotherDate, compareWithDate, nyct, sir, rit, pth, jfk } = this.state;
+    const {
+      isMobile,
+      isDataBoxVisible,
+      isDataLoaded,
+      selectedDate,
+      selectedDateObj,
+      selectedStation,
+      selectedStationObj,
+      mode,
+      compareWithAnotherDate,
+      compareWithDate,
+      compareWithDateObj,
+      nyct,
+      sir,
+      rit,
+      pth,
+      jfk
+    } = this.state;
     return (
       <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
         <div ref={el => this.mapContainer = el} className='mapbox'>
         </div>
-        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} latestDate={latestDate} selectedDate={selectedDate}
+        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} latestDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
           handleDateInputChange={this.handleDateInputChange} />
         { (!isMobile || isDataBoxVisible) &&
-          <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} selectedStation={selectedStation} isMobile={isMobile}
-            selectedDate={selectedDate} compareWithDate={compareWithAnotherDate && compareWithDate} handleToggle={this.handleToggle}
+          <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
+            selectedStation={selectedStation} selectedStationObj={selectedStationObj} isMobile={isMobile}
+            selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+            compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
+            firstYear={firstYear} lastYear={lastYear} handleToggle={this.handleToggle} isDataLoaded={isDataLoaded}
             handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
           }
       </Responsive>

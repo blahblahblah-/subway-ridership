@@ -1,28 +1,22 @@
 import React from 'react';
-import { Line } from '@nivo/line';
 
+import Graph from './graph';
 import overall from './data/overall.json';
-import overall2019 from './data/overall_2019.json';
 
 class OverallGraph extends React.Component {
-  handleClick = (point, event) => {
-    const { handleGraphClick } = this.props;
-    handleGraphClick(point.data.xFormatted);
-  }
-
   graphData() {
-    const { nyct, sir, rit, pth, jfk, year } = this.props;
+    const { nyct, sir, rit, pth, jfk, selectedYear } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
 
     return Object.keys(settings).filter((system) => {
       return settings[system];
     }).flatMap((system) => {
-      let systemData = (year === 2020) ? overall[system] : overall2019[system];
       return ["entries", "exits"].map((field) => {
+        const keys = Object.keys(overall[system]).filter((date) => date.startsWith(selectedYear));
         return {
           'id': `${system} ${field}`,
-          'data': Object.keys(systemData).map((key) => {
-                    const data = systemData[key];
+          'data': keys.map((key) => {
+                    const data = overall[system][key];
                     return {
                       "x": key,
                       "y":  data[field]
@@ -34,106 +28,9 @@ class OverallGraph extends React.Component {
   }
 
   render() {
-    const { isMobile } = this.props;
-    const theme = {
-      axis: {
-        ticks: {
-          line: {
-            stroke: "black"
-          },
-          text: {
-            fill: "#333"
-          }
-        },
-      },
-      tooltip: {
-        container: {
-          background: '#ccc',
-          color: '#333'
-        }
-      },
-      legends: {
-        text: {
-          fill: '#333'
-        }
-      }
-    };
-    const format = (number) => {
-      return number.toLocaleString('en-US')
-    }
-
-    const data = this.graphData();
-
+    const { isMobile, handleGraphClick } = this.props;
     return (
-      <Line
-        width={isMobile ? 270 : 440}
-        height={400}
-        margin={{
-          top: 0,
-          right: 0,
-          bottom: 100,
-          left: isMobile ? 0 : 60
-        }}
-        data={data}
-        enableArea={false}
-        colors={{'scheme': 'set2'}}
-        xScale={{
-          type: 'time',
-          format: '%Y-%m-%d',
-          precision: 'day',
-        }}
-        xFormat="time:%Y-%m-%d"
-        yFormat={format}
-        enablePoints={false}
-        enableGridY={true}
-        enableGridX={false}
-        isInteractive={true}
-        useMesh={true}
-        enableSlices={false}
-        axisBottom={{
-          format: '%Y-%m-%d',
-          orient: "bottom",
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: -50,
-        }}
-        axisLeft={isMobile ? null : {
-          orient: "left",
-          tickSize: 0,
-          tickPadding: 5,
-          tickRotation: 0,
-          format: format,
-        }}
-        legends={[
-          {
-            anchor: "bottom",
-            direction: "row",
-            justify: false,
-            translateX: 0,
-            translateY: 100,
-            itemsSpacing: 10,
-            itemDirection: "left-to-right",
-            itemWidth: 70,
-            itemHeight: 20,
-            itemOpacity: 0.75,
-            itemTextColor: "#000000",
-            symbolSize: 5,
-            symbolShape: "circle",
-            symbolBorderColor: "rgba(0, 0, 0, .5)",
-            effects: [
-              {
-                  on: "hover",
-                  style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1
-                  }
-              }
-            ]
-          }
-        ]}
-        theme={theme}
-        onClick={this.handleClick}
-      />
+      <Graph isMobile={isMobile} handleGraphClick={handleGraphClick} data={this.graphData()} />
     )
   }
 }

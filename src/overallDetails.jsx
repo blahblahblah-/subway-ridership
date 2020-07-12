@@ -6,18 +6,9 @@ import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
 import StationList from './stationList';
+import { selectYearOptions } from './utils';
 
 import overall from './data/overall.json';
-import overall2019 from './data/overall_2019.json';
-
-let overallAll = {};
-['NYCT', 'SIR', 'RIT', 'PTH', 'JFK'].forEach((key) => {
-  overallAll[key] = Object.assign(Object.assign({}, overall2019[key]), overall[key]);
-});
-const yearOptions = [
-  {key: 2019, text: 2019, value: 2019},
-  {key: 2020, text: 2020, value: 2020},
-]
 
 class OverallDetails extends React.Component {
   constructor(props) {
@@ -42,7 +33,7 @@ class OverallDetails extends React.Component {
     [selectedDate, compareWithDate].filter((date) => date).forEach((date) => {
       results[date] = {};
       ['entries', 'exits'].forEach((field) => {
-        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overallAll[system] ? overallAll[system][date][field] : 0).reduce((acc, cur) => acc + cur, 0);
+        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overall[system] && overall[system][date] ? overall[system][date][field] : 0).reduce((acc, cur) => acc + cur, 0);
       });
     })
     return results;
@@ -51,8 +42,26 @@ class OverallDetails extends React.Component {
   handleYearChange = (e, { value }) => this.setState({ selectedYear: value });
 
   render() {
-    const { nyct, sir, rit, pth, jfk, isMobile, handleSelectStation, handleToggle, handleGraphClick, mode, selectedDate, compareWithDate } = this.props;
+    const {
+      nyct,
+      sir,
+      rit,
+      pth,
+      jfk,
+      isMobile,
+      selectedDate,
+      selectedDateObj,
+      compareWithDate,
+      compareWithDateObj,
+      firstYear,
+      lastYear,
+      handleSelectStation,
+      handleToggle,
+      handleGraphClick,
+      mode,
+    } = this.props;
     const { selectedYear } = this.state;
+    const data = this.combinedDetails();
     return (
       <div className='overall-details'>
         <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
@@ -69,8 +78,11 @@ class OverallDetails extends React.Component {
                 return (
                   <Tab.Pane attached={false}>
                     { compareWithDate ?
-                      <DetailsCompareDates isMobile={isMobile} data={this.combinedDetails()} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
-                      <DetailsDate isMobile={isMobile} data={this.combinedDetails()} selectedDate={selectedDate} />
+                      <DetailsCompareDates isMobile={isMobile}
+                        selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
+                        compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
+                      /> :
+                      <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} />
                     }
                   </Tab.Pane>
                 )
@@ -81,7 +93,10 @@ class OverallDetails extends React.Component {
               render: () => {
                 return (
                   <Tab.Pane attached={false}>
-                    <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} handleSelectStation={handleSelectStation} selectedDate={selectedDate} compareWithDate={compareWithDate} />
+                    <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
+                      selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+                      compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj}
+                      handleSelectStation={handleSelectStation} />
                   </Tab.Pane>
                 )
               },
@@ -91,10 +106,10 @@ class OverallDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium'>
             Daily Counts in&nbsp;
-            <Dropdown inline options={yearOptions} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
+            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
           </Header>
         </Divider>
-        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} year={selectedYear} />
+        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
       </div>
     )
   }

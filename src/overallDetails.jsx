@@ -41,7 +41,7 @@ class OverallDetails extends React.Component {
                   <Tab.Pane attached={false}>
                     { compareWithDate ?
                       <DetailsCompareDates isMobile={isMobile} data={this.combinedDetails()} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
-                      <DetailsDate data={this.combinedDetails()} selectedDate={selectedDate} />
+                      <DetailsDate isMobile={isMobile} data={this.combinedDetails()} selectedDate={selectedDate} />
                     }
                   </Tab.Pane>
                 )

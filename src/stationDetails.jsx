@@ -32,7 +32,7 @@ class StationDetails extends React.Component {
         {
           compareWithDate ?
             <DetailsCompareDates isMobile={isMobile} data={complexData} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
-            <DetailsDate data={complexData} selectedDate={selectedDate} />
+            <DetailsDate isMobile={isMobile} data={complexData} selectedDate={selectedDate} />
         }
         <Divider horizontal>
           <Header size='medium'>Daily Counts in 2020</Header>

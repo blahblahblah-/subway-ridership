@@ -16,7 +16,8 @@ yarn install
 * Sign up for an account with [Mapbox](https://www.mapbox.com), get a token and add it to an `.env` file as `REACT_APP_MAPBOX_TOKEN`.
 
 * Download datasets from qri:
-  * [NYC Subway Turnstiles Counts - 2020](https://qri.cloud/nyc-transit-data/turnstile_daily_counts_2020), copy `csv` file over to `data/turnstile_counts.csv`
+  * [NYC Subway Turnstiles Counts - 2020](https://qri.cloud/nyc-transit-data/turnstile_daily_counts_2020), copy `csv` file over to `data/turnstile_counts_2020.csv`
+  * Optional: [NYC Subway Turnstiles Counts - 2019](https://qri.cloud/nyc-transit-data/turnstile_daily_counts_2019), copy `csv` file over to `data/turnstile_counts_2019.csv`
   * [NYC Turnstiles Station List](https://qri.cloud/nyc-transit-data/stationscsv), copy `csv` file over to `data/turnstile_station_list.csv`
 
 `````

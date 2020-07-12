@@ -4,11 +4,11 @@ import { Statistic, Divider, Header } from "semantic-ui-react";
 class DetailsCompareDates extends React.Component {
   render() {
     const { isMobile, selectedDate, compareWithDate, selectedDateObj, compareWithDateObj } = this.props;
-    const compareWithEntries = selectedDateObj.entries;
-    const selectedEntries = compareWithDateObj.entries;
+    const compareWithEntries = compareWithDateObj.entries;
+    const selectedEntries = selectedDateObj.entries;
     const entriesChange = (selectedEntries - compareWithEntries) / compareWithEntries * 100;
-    const compareWithExits = selectedDateObj.exits;
-    const selectedExits = compareWithDateObj.exits;
+    const compareWithExits = compareWithDateObj.exits;
+    const selectedExits = selectedDateObj.exits;
     const exitsChange = (selectedExits - compareWithExits) / compareWithExits * 100;
     return (
       <div>

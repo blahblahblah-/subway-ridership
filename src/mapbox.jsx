@@ -75,13 +75,13 @@ class Mapbox extends React.Component {
   }
 
   refreshMap() {
-    const { selectedDate, compareWithAnotherDate } = this.state;
+    const { selectedDate, compareWithDate, compareWithAnotherDate } = this.state;
 
     fetch(`dates/${selectedDate}.json`)
       .then(response => response.json())
       .then(data => {
         if (compareWithAnotherDate) {
-          fetch(`dates/${selectedDate}.json`)
+          fetch(`dates/${compareWithDate}.json`)
             .then(response => response.json())
             .then(compareWithData => {
                this.setState({ selectedDateObj: data, compareWithDateObj: compareWithData, isDataLoaded: true}, this.updateMap);

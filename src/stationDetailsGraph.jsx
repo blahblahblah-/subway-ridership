@@ -1,19 +1,17 @@
 import React from 'react';
-import { Line } from '@nivo/line';
+
+import Graph from './graph';
 
 class StationDetailsGraph extends React.Component {
-  handleClick = (point, event) => {
-    const { handleGraphClick } = this.props;
-    handleGraphClick(point.data.xFormatted);
-  }
-
   graphData() {
-    const { complexData } = this.props;
+    const { complexData, selectedYear } = this.props;
+
+    const keys = Object.keys(complexData).filter((date) => date.startsWith(selectedYear));
 
     return ["entries", "exits"].map((field) => {
       return {
         'id': field,
-        'data': Object.keys(complexData).map((key) => {
+        'data': keys.map((key) => {
                   const data = complexData[key];
                   return {
                     "x": key,
@@ -25,106 +23,9 @@ class StationDetailsGraph extends React.Component {
   }
 
   render() {
-    const { isMobile } = this.props;
-    const theme = {
-      axis: {
-        ticks: {
-          line: {
-            stroke: "black"
-          },
-          text: {
-            fill: "#333"
-          }
-        },
-      },
-      tooltip: {
-        container: {
-          background: '#ccc',
-          color: '#333'
-        }
-      },
-      legends: {
-        text: {
-          fill: '#333'
-        }
-      }
-    };
-    const format = (number) => {
-      return number.toLocaleString('en-US')
-    }
-
-    const data = this.graphData();
-
+    const { isMobile, handleGraphClick } = this.props;
     return (
-      <Line
-        width={isMobile ? 270 : 440}
-        height={400}
-        margin={{
-          top: 0,
-          right: 0,
-          bottom: 100,
-          left: isMobile ? 0 : 50
-        }}
-        data={data}
-        enableArea={false}
-        colors={{'scheme': 'set2'}}
-        xScale={{
-          type: 'time',
-          format: '%Y-%m-%d',
-          precision: 'day',
-        }}
-        xFormat="time:%Y-%m-%d"
-        yFormat={format}
-        enablePoints={false}
-        enableGridY={true}
-        enableGridX={false}
-        isInteractive={true}
-        useMesh={true}
-        enableSlices={false}
-        axisBottom={{
-          format: '%Y-%m-%d',
-          orient: "bottom",
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: -50,
-        }}
-        axisLeft={ isMobile ? null : {
-          orient: "left",
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          format: format,
-        }}
-        legends={[
-          {
-            anchor: "bottom",
-            direction: "row",
-            justify: false,
-            translateX: 0,
-            translateY: 100,
-            itemsSpacing: 50,
-            itemDirection: "left-to-right",
-            itemWidth: 80,
-            itemHeight: 20,
-            itemOpacity: 0.75,
-            itemTextColor: "#000000",
-            symbolSize: 12,
-            symbolShape: "circle",
-            symbolBorderColor: "rgba(0, 0, 0, .5)",
-            effects: [
-              {
-                  on: "hover",
-                  style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1
-                  }
-              }
-            ]
-          }
-        ]}
-        theme={theme}
-        onClick={this.handleClick}
-      />
+      <Graph isMobile={isMobile} handleGraphClick={handleGraphClick} data={this.graphData()} />
     )
   }
 }

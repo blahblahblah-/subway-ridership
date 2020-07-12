@@ -6,15 +6,9 @@ import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
 import StationDetailsGraph from './stationDetailsGraph';
 import StationRoutes from './stationRoutes';
+import { selectYearOptions } from './utils';
 
 import stations from './data/stations.json';
-import byComplexId from './data/byComplexId.json';
-import byComplexId2019 from './data/byComplexId_2019.json';
-
-const yearOptions = [
-  {key: 2019, text: 2019, value: 2019},
-  {key: 2020, text: 2020, value: 2020},
-]
 
 class StationDetails extends React.Component {
   constructor(props) {
@@ -35,9 +29,18 @@ class StationDetails extends React.Component {
   handleYearChange = (e, { value }) => this.setState({ selectedYear: value });
 
   render() {
-    const { isMobile, selectedStation, handleBack, handleGraphClick, selectedDate, compareWithDate } = this.props;
+    const {
+      isMobile,
+      selectedDate,
+      compareWithDate,
+      selectedStation,
+      selectedStationObj,
+      firstYear,
+      lastYear,
+      handleBack,
+      handleGraphClick,
+    } = this.props;
     const { selectedYear } = this.state;
-    const complexData = Object.assign(Object.assign({}, byComplexId2019[selectedStation]), byComplexId[selectedStation]);
     return (
       <div className='station-details'>
         <div className='top'>
@@ -56,16 +59,17 @@ class StationDetails extends React.Component {
         <Divider hidden />
         {
           compareWithDate ?
-            <DetailsCompareDates isMobile={isMobile} data={complexData} selectedDate={selectedDate} compareWithDate={compareWithDate} /> :
-            <DetailsDate isMobile={isMobile} data={complexData} selectedDate={selectedDate} />
+            <DetailsCompareDates isMobile={isMobile} selectedDate={selectedDate} selectedDateObj={selectedStationObj[selectedDate]}
+            compareWithDate={compareWithDate} compareWithDateObj={selectedStationObj[compareWithDate]} /> :
+            <DetailsDate isMobile={isMobile} data={selectedStationObj[selectedDate]} selectedDate={selectedDate} />
         }
         <Divider horizontal>
           <Header size='medium'>
             Daily Counts in&nbsp;
-            <Dropdown inline options={yearOptions} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
+            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
           </Header>
         </Divider>
-        <StationDetailsGraph isMobile={isMobile} complexData={selectedYear === 2020 ? byComplexId[selectedStation] : byComplexId2019[selectedStation]} handleGraphClick={handleGraphClick} year={selectedYear} />
+        <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
       </div>
     )
   }

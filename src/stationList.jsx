@@ -3,20 +3,16 @@ import { List, Header } from "semantic-ui-react";
 
 import StationRoutes from './stationRoutes';
 
-import byDate from './data/byDate.json';
-import byDate2019 from './data/byDate_2019.json';
 import stations from './data/stations.json';
-
-const allDates = Object.assign(Object.assign({}, byDate2019), byDate);
 
 class StationList extends React.Component {
   getData(station) {
-    const { selectedDate, compareWithDate, mode } = this.props;
+    const { selectedDateObj, compareWithDate, compareWithDateObj, mode } = this.props;
     if (!compareWithDate) {
-      return allDates[selectedDate][station][mode];
+      return selectedDateObj[station][mode];
     }
-    const compareWith = allDates[compareWithDate][station][mode];
-    const selected = allDates[selectedDate][station][mode];
+    const compareWith = compareWithDateObj[station][mode];
+    const selected = selectedDateObj[station][mode];
     return (selected - compareWith) / compareWith;
   }
 
@@ -45,11 +41,11 @@ class StationList extends React.Component {
   }
 
   renderListItems() {
-    const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate } = this.props;
+    const { nyct, sir, rit, pth, jfk, selectedDateObj, compareWithDate, compareWithDateObj } = this.props;
     const systems = {NYCT: nyct, SIR: sir, RIT: rit, PTH: pth, JFK: jfk };
 
     return Object.keys(stations).filter((station) => {
-      return systems[stations[station].system] && allDates[selectedDate][station] && (!compareWithDate || allDates[compareWithDate][station]);
+      return systems[stations[station].system] && selectedDateObj[station] && (!compareWithDate || compareWithDateObj[station]);
     }).map((station) => {
       return {
         id: station,

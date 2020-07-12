@@ -12,11 +12,11 @@ class DetailsDate extends React.Component {
         <Statistic.Group widths={2} size={isMobile ? 'mini' : 'tiny'}>
           <Statistic>
             <Statistic.Label>Entries</Statistic.Label>
-            <Statistic.Value>{ data[selectedDate].entries.toLocaleString('en-US') }</Statistic.Value>
+            <Statistic.Value>{ data.entries.toLocaleString('en-US') }</Statistic.Value>
           </Statistic>
           <Statistic>
             <Statistic.Label>Exits</Statistic.Label>
-            <Statistic.Value>{ data[selectedDate].exits.toLocaleString('en-US') }</Statistic.Value>
+            <Statistic.Value>{ data.exits.toLocaleString('en-US') }</Statistic.Value>
           </Statistic>
         </Statistic.Group>
       </div>

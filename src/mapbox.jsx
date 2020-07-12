@@ -308,7 +308,7 @@ class Mapbox extends React.Component {
       <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
         <div ref={el => this.mapContainer = el} className='mapbox'>
         </div>
-        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} latestDate={lastDate} selectedDate={selectedDate}
+        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
           handleDateInputChange={this.handleDateInputChange} />
         { (!isMobile || isDataBoxVisible) &&

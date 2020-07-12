@@ -13,7 +13,7 @@ const significantDates = [
 
 class ConfigBox extends React.Component {
   render() {
-    const { mode, isMobile, handleModeClick, latestDate, selectedDate, compareWithAnotherDate, handleToggle, compareWithDate,
+    const { mode, isMobile, handleModeClick, firstDate, lastDate, selectedDate, compareWithAnotherDate, handleToggle, compareWithDate,
        handleDateInputChange, handleToggleDataBox } = this.props;
     return (
       <Segment inverted vertical className="configbox">
@@ -40,8 +40,8 @@ class ConfigBox extends React.Component {
             label='Date'
             name='selectedDate'
             dateFormat='YYYY-MM-DD'
-            minDate='2019-01-01'
-            maxDate={latestDate}
+            minDate={firstDate}
+            maxDate={lastDate}
             value={selectedDate}
             onChange={handleDateInputChange}
             marked={significantDates.map((d) => new Date(`${d}Z-04:00`))}
@@ -60,8 +60,8 @@ class ConfigBox extends React.Component {
             disable={selectedDate}
             name='compareWithDate'
             dateFormat='YYYY-MM-DD'
-            minDate='2019-01-01'
-            maxDate={latestDate}
+            minDate={firstDate}
+            maxDate={lastDate}
             value={compareWithDate}
             onChange={handleDateInputChange}
             marked={significantDates.map((d) => new Date(`${d}Z-04:00`))}

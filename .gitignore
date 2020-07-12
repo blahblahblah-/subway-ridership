@@ -24,8 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 /data/*.csv
-/src/data
-
-/public/complexId/*.json
-/public/dates/*.json
-
+/src/data/*.json
+/src/data/*/*.json

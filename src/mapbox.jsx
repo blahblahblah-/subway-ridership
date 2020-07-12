@@ -77,12 +77,10 @@ class Mapbox extends React.Component {
   refreshMap() {
     const { selectedDate, compareWithDate, compareWithAnotherDate } = this.state;
 
-    fetch(`dates/${selectedDate}.json`)
-      .then(response => response.json())
+    import(`./data/dates/${selectedDate}.json`)
       .then(data => {
         if (compareWithAnotherDate) {
-          fetch(`dates/${compareWithDate}.json`)
-            .then(response => response.json())
+          import(`./data/dates/${compareWithDate}.json`)
             .then(compareWithData => {
                this.setState({ selectedDateObj: data, compareWithDateObj: compareWithData, isDataLoaded: true}, this.updateMap);
             });
@@ -95,8 +93,7 @@ class Mapbox extends React.Component {
   selectStation() {
     const { selectedStation } = this.state;
 
-    fetch(`complexId/${selectedStation}.json`)
-      .then(response => response.json())
+    import(`./data/complexId/${selectedStation}.json`)
       .then(data => {
         this.setState({ selectedStationObj: data, isDataLoaded: true}, this.navigateToStation);
       });

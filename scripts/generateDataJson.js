@@ -76,7 +76,7 @@ const getSystem = (division) => {
 
   Object.keys(byDays).forEach((date) => {
     const dateJson = JSON.stringify(byDays[date]);
-    fs.writeFile(`${__dirname}/../public/dates/${date}.json`, dateJson, 'utf8', (err) => {
+    fs.writeFile(`${__dirname}/../src/data/dates/${date}.json`, dateJson, 'utf8', (err) => {
       if (err) throw err;
       console.log(`${date} has been saved!`);
     });
@@ -84,7 +84,7 @@ const getSystem = (division) => {
 
   Object.keys(byComplexId).forEach((complexId) => {
     const complexJson = JSON.stringify(byComplexId[complexId]);
-    fs.writeFile(`${__dirname}/../public/complexId/${complexId}.json`, complexJson, 'utf8', (err) => {
+    fs.writeFile(`${__dirname}/../src/data/complexId/${complexId}.json`, complexJson, 'utf8', (err) => {
       if (err) throw err;
       console.log(`${complexId} has been saved!`);
     });

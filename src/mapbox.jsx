@@ -104,7 +104,6 @@ class Mapbox extends React.Component {
 
     this.map.easeTo({
       center: stations[selectedStation].coordinates,
-      zoom: 15,
       bearing: 29,
     });
   }

@@ -44,7 +44,7 @@ class Graph extends React.Component {
           top: 0,
           right: 0,
           bottom: 100,
-          left: isMobile ? 0 : 50
+          left: isMobile ? 0 : 60
         }}
         data={data}
         enableArea={false}

@@ -9,7 +9,7 @@ import timestamp from './data/timestamp.json';
 class DataBox extends React.Component {
   componentDidUpdate(prevProps) {
     const { selectedDate, selectedStation, compareWithDate } = this.props;
-    if (prevProps.selectedStation !== selectedStation || prevProps.compareWithDate !== compareWithDate) {
+    if (prevProps.selectedStation !== selectedStation) {
       this.dataBox.scrollTop = 0;
     }
   }

@@ -13,7 +13,7 @@ import overall from './data/overall.json';
 const center = [-73.9905, 40.73925];
 const dates = Object.keys(overall['NYCT']).sort();
 const firstDate = dates[0];
-const lastDate = dates[dates.length - 2];
+const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
 const lastYear = moment(lastDate).year();
 

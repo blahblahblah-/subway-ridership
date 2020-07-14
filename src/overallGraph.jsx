@@ -12,7 +12,7 @@ class OverallGraph extends React.Component {
       return settings[system];
     }).flatMap((system) => {
       return ["entries", "exits"].map((field) => {
-        const keys = Object.keys(overall[system]).filter((date) => date.startsWith(selectedYear));
+        const keys = Object.keys(overall[system]).filter((date) => date.startsWith(selectedYear)).sort();
         return {
           'id': `${system} ${field}`,
           'data': keys.map((key) => {

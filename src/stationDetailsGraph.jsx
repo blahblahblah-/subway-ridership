@@ -6,7 +6,7 @@ class StationDetailsGraph extends React.Component {
   graphData() {
     const { complexData, selectedYear } = this.props;
 
-    const keys = Object.keys(complexData).filter((date) => date.startsWith(selectedYear));
+    const keys = Object.keys(complexData).filter((date) => date.startsWith(selectedYear)).sort();
 
     return ["entries", "exits"].map((field) => {
       return {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Divider, Header, Tab, Dropdown } from "semantic-ui-react";
+import { Checkbox, Divider, Header, Tab, Dropdown, Modal, Button, Icon, Responsive } from "semantic-ui-react";
 import moment from 'moment';
 
 import OverallGraph from './overallGraph';
@@ -11,6 +11,14 @@ import { selectYearOptions } from './utils';
 import overall from './data/overall.json';
 
 class OverallDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: 0,
+      height: 0,
+    }
+  }
+
   combinedDetails() {
     const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
@@ -23,6 +31,14 @@ class OverallDetails extends React.Component {
     })
     return results;
   }
+
+  handleGetWidth = () => {
+    return { width: window.innerWidth, height: window.innerHeight };
+  };
+
+  handleOnUpdate = (e, { width }) => {
+    this.setState(width);
+  };
 
   render() {
     const {
@@ -44,6 +60,7 @@ class OverallDetails extends React.Component {
       handleYearChange,
       mode,
     } = this.props;
+    const { width, height } = this.state;
     const selectedYear = moment(selectedDate).year();
     const data = this.combinedDetails();
     return (
@@ -93,7 +110,18 @@ class OverallDetails extends React.Component {
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
           </Header>
         </Divider>
-        <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
+        <div>
+          <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
+          <Modal trigger={<Button icon className='graph-popup-btn'><Icon name='expand arrows alternate' /></Button>} size='fullscreen' closeIcon>
+            <Modal.Header>
+              Daily Counts in&nbsp;
+              <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
+            </Modal.Header>
+            <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
+              <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
+            </Responsive>
+          </Modal>
+         </div>
       </div>
     )
   }

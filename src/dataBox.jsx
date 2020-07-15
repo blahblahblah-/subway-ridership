@@ -39,7 +39,7 @@ class DataBox extends React.Component {
       handleYearChange,
     } = this.props;
     return (
-      <Segment inverted vertical className="databox" onUpdate={this.handleOnUpdate}>
+      <Segment inverted vertical className="databox">
         {
           !isDataLoaded &&
           <Dimmer active>
@@ -49,12 +49,12 @@ class DataBox extends React.Component {
         <div className='inner-databox' ref={el => this.dataBox = el}>
           <Segment>
             { selectedStation && selectedStationObj ?
-                <StationDetails isMobile={isMobile} handleBack={handleBack}
+                <StationDetails isMobile={isMobile}
                   selectedStation={selectedStation} selectedStationObj={selectedStationObj}
                   selectedDate={selectedDate}
                   compareWithDate={compareWithDate}
                   firstYear={firstYear} lastYear={lastYear}
-                  handleYearChange={handleYearChange}
+                  handleYearChange={handleYearChange} handleBack={handleBack}
                   handleGraphClick={handleGraphClick} /> :
                 <OverallDetails isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
                   selectedDate={selectedDate} selectedDateObj={selectedDateObj}

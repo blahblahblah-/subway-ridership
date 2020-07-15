@@ -7,6 +7,23 @@ class Graph extends React.Component {
     handleGraphClick(point.data.xFormatted);
   }
 
+  width() {
+    const { isMobile, width } = this.props;
+    if (width) {
+      return width - 200;
+    }
+    return isMobile ? 270 : 440;
+  }
+
+  height() {
+    const { height } = this.props;
+    if (height) {
+      return height - 200;
+    }
+
+    return 400;
+  }
+
   render() {
     const { isMobile, data } = this.props;
     const theme = {
@@ -38,8 +55,8 @@ class Graph extends React.Component {
 
     return (
       <Line
-        width={isMobile ? 270 : 440}
-        height={400}
+        width={this.width()}
+        height={this.height()}
         margin={{
           top: 0,
           right: 0,

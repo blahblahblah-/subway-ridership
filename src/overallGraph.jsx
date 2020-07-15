@@ -28,9 +28,9 @@ class OverallGraph extends React.Component {
   }
 
   render() {
-    const { isMobile, handleGraphClick } = this.props;
+    const { isMobile, handleGraphClick, width, height } = this.props;
     return (
-      <Graph isMobile={isMobile} handleGraphClick={handleGraphClick} data={this.graphData()} />
+      <Graph isMobile={isMobile} handleGraphClick={handleGraphClick} data={this.graphData()} width={width} height={height} />
     )
   }
 }

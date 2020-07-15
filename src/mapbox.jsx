@@ -242,6 +242,26 @@ class Mapbox extends React.Component {
     }
   }
 
+  handleYearChange = (e, { value }) => {
+    const { selectedDate } = this.state;
+    const lastDateObj = moment(lastDate);
+    let newDate = moment(selectedDate).year(value);
+    if (newDate > lastDateObj) {
+      newDate = lastDateObj;
+    }
+    const nextYearToday = newDate.clone().add(1, 'year');
+
+    let newCompareWithDate = newDate.clone().year(value - 1);
+
+    if (value === firstYear && nextYearToday <= lastDateObj) {
+      newCompareWithDate = nextYearToday;
+    } else if (value === firstYear) {
+      newCompareWithDate = newDate.clone().add(1, 'day').format('YYYY-MM-DD');
+    }
+
+    this.setState({ selectedDate: newDate.format('YYYY-MM-DD'), compareWithDate: newCompareWithDate.format('YYYY-MM-DD') });
+  }
+
   handleOnUpdate = (e, { width }) => {
     this.setState({ 'isMobile': width < Responsive.onlyTablet.minWidth });
   };
@@ -316,6 +336,7 @@ class Mapbox extends React.Component {
             selectedDate={selectedDate} selectedDateObj={selectedDateObj}
             compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
             firstYear={firstYear} lastYear={lastYear} handleToggle={this.handleToggle} isDataLoaded={isDataLoaded}
+            handleYearChange={this.handleYearChange}
             handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
           }
       </Responsive>

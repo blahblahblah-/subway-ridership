@@ -11,23 +11,6 @@ import { selectYearOptions } from './utils';
 import stations from './data/stations.json';
 
 class StationDetails extends React.Component {
-  constructor(props) {
-    super(props);
-    const year = moment(props.selectedDate).year();
-
-    this.state = {selectedYear: year};
-  }
-
-  componentDidUpdate(prevProps) {
-    const { selectedDate } = this.props;
-    if (prevProps.selectedDate !== selectedDate) {
-      const year = moment(selectedDate).year();
-      this.setState({selectedYear: year});
-    }
-  }
-
-  handleYearChange = (e, { value }) => this.setState({ selectedYear: value });
-
   render() {
     const {
       isMobile,
@@ -39,8 +22,9 @@ class StationDetails extends React.Component {
       lastYear,
       handleBack,
       handleGraphClick,
+      handleYearChange,
     } = this.props;
-    const { selectedYear } = this.state;
+    const selectedYear = moment(selectedDate).year();
     return (
       <div className='station-details'>
         <div className='top'>
@@ -66,7 +50,7 @@ class StationDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium'>
             Daily Counts in&nbsp;
-            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
+            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
           </Header>
         </Divider>
         <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />

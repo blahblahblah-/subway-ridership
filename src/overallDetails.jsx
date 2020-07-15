@@ -11,21 +11,6 @@ import { selectYearOptions } from './utils';
 import overall from './data/overall.json';
 
 class OverallDetails extends React.Component {
-  constructor(props) {
-    super(props);
-    const year = moment(props.selectedDate).year();
-
-    this.state = {selectedYear: year};
-  }
-
-  componentDidUpdate(prevProps) {
-    const { selectedDate } = this.props;
-    if (prevProps.selectedDate !== selectedDate) {
-      const year = moment(selectedDate).year();
-      this.setState({selectedYear: year});
-    }
-  }
-
   combinedDetails() {
     const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
@@ -38,8 +23,6 @@ class OverallDetails extends React.Component {
     })
     return results;
   }
-
-  handleYearChange = (e, { value }) => this.setState({ selectedYear: value });
 
   render() {
     const {
@@ -58,9 +41,10 @@ class OverallDetails extends React.Component {
       handleSelectStation,
       handleToggle,
       handleGraphClick,
+      handleYearChange,
       mode,
     } = this.props;
-    const { selectedYear } = this.state;
+    const selectedYear = moment(selectedDate).year();
     const data = this.combinedDetails();
     return (
       <div className='overall-details'>
@@ -106,7 +90,7 @@ class OverallDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium'>
             Daily Counts in&nbsp;
-            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={this.handleYearChange} />
+            <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
           </Header>
         </Divider>
         <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />

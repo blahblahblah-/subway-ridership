@@ -35,7 +35,8 @@ class DataBox extends React.Component {
       firstYear,
       lastYear,
       handleBack,
-      handleGraphClick
+      handleGraphClick,
+      handleYearChange,
     } = this.props;
     return (
       <Segment inverted vertical className="databox" onUpdate={this.handleOnUpdate}>
@@ -53,11 +54,13 @@ class DataBox extends React.Component {
                   selectedDate={selectedDate}
                   compareWithDate={compareWithDate}
                   firstYear={firstYear} lastYear={lastYear}
+                  handleYearChange={handleYearChange}
                   handleGraphClick={handleGraphClick} /> :
                 <OverallDetails isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
                   selectedDate={selectedDate} selectedDateObj={selectedDateObj}
                   compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj}
                   firstYear={firstYear} lastYear={lastYear}
+                  handleYearChange={handleYearChange}
                   handleSelectStation={handleSelectStation} handleToggle={handleToggle} handleGraphClick={handleGraphClick} />
              }
           </Segment>

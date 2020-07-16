@@ -50,7 +50,7 @@ class ConfigBox extends React.Component {
             size='mini'
             hideMobileKeyboard
           />
-          <Checkbox label='Compare with another date' name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
+          <Checkbox label={isMobile ? 'Compare' : 'Compare with another date'} name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
           <DateInput
             className='date-input compare-date-input'
             placeholder='Compare with Date'

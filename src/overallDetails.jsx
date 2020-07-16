@@ -40,6 +40,17 @@ class OverallDetails extends React.Component {
     this.setState(width);
   };
 
+  checkboxes() {
+    const { isMobile } = this.props;
+    return [
+      { label: 'NYCT Subway', field: 'nyct'},
+      { label: isMobile ? 'SIR' : 'Staten Island Railway', field: 'sir'},
+      { label: isMobile ? 'RIT' : 'Roosevelt Island Tramway', field: 'rit'},
+      { label: 'PATH', field: 'pth'},
+      { label: 'AirTrain JFK', field: 'jfk'},
+    ];
+  }
+
   render() {
     const {
       nyct,
@@ -65,11 +76,13 @@ class OverallDetails extends React.Component {
     const data = this.combinedDetails();
     return (
       <div className='overall-details'>
-        <Checkbox label='NYCT Subway' name='nyct' checked={nyct} onChange={handleToggle} />
-        <Checkbox label='Staten Island Railway' name='sir' checked={sir} onChange={handleToggle} />
-        <Checkbox label='Roosevelt Island Tramway' name='rit' checked={rit} onChange={handleToggle} />
-        <Checkbox label='PATH' name='pth' checked={pth} onChange={handleToggle} />
-        <Checkbox label='AirTrain JFK' name='jfk' checked={jfk} onChange={handleToggle} />
+        {
+          this.checkboxes().map((c) => {
+            return (
+              <Checkbox label={c.label} name={c.field} checked={this.props[c.field]} key={c.field} onChange={handleToggle} />
+            )
+          })
+        }
         <Divider className='tab-separator' />
         <Tab menu={{secondary: true, pointing: true}} panes={
           [
@@ -110,7 +123,7 @@ class OverallDetails extends React.Component {
               Daily Counts in&nbsp;
             </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
-            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' link /></div>} size='fullscreen' closeIcon>
+            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
               <Modal.Header>
                 Daily Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />

@@ -71,7 +71,7 @@ class StationDetails extends React.Component {
               Daily Counts in&nbsp;
             </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
-            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' link /></div>} size='fullscreen' closeIcon>
+            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
               <Modal.Header>
                 Daily Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />

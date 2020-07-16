@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Divider, Header, Tab, Dropdown, Modal, Button, Icon, Responsive } from "semantic-ui-react";
+import { Divider, Header, Dropdown, Modal, Button, Icon, Responsive } from "semantic-ui-react";
 import moment from 'moment';
 
 import DetailsDate from './detailsDate';

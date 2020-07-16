@@ -66,22 +66,24 @@ class StationDetails extends React.Component {
             <DetailsDate isMobile={isMobile} data={selectedStationObj[selectedDate]} selectedDate={selectedDate} />
         }
         <Divider horizontal>
-          <Header size='medium'>
-            Daily Counts in&nbsp;
+          <Header size='medium' className='details-graph-header'>
+            <div>
+              Daily Counts in&nbsp;
+            </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
+            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' link /></div>} size='fullscreen' closeIcon>
+              <Modal.Header>
+                Daily Counts in&nbsp;
+                <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
+              </Modal.Header>
+              <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
+                <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
+              </Responsive>
+            </Modal>
           </Header>
         </Divider>
         <div>
           <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
-          <Modal trigger={<Button icon className='graph-popup-btn'><Icon name='expand arrows alternate' /></Button>} size='fullscreen' closeIcon>
-            <Modal.Header>
-              Daily Counts in&nbsp;
-              <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
-            </Modal.Header>
-            <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
-              <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
-            </Responsive>
-          </Modal>
         </div>
       </div>
     )

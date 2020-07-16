@@ -212,8 +212,13 @@ form.ui.inverted.form {
   }
 }
 
-.graph-popup-btn {
-  position: absolute;
-  right: 10px;
-  bottom: 20px;
+
+.details-graph-header {
+  display: flex;
+  align-items: center;
+
+  .icon-container {
+    display: flex;
+    align-items: flex-start;
+  }
 }

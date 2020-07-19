@@ -26,9 +26,8 @@ body {
     float: left;
   }
 
-  .field.compare-date-input {
-    display: inline-block;
-    margin-left: 5px;
+  .ui.mini.icon.input .date-input {
+    width: 80%
   }
 
   @media only screen and (max-width: 767px) {
@@ -207,7 +206,7 @@ body {
 .ui.button.mobile-data-box-control {
   float: right;
   margin-right: 0;
-  margin-top: -35px;
+  margin-top: -21px;
 }
 
 form.ui.inverted.form {

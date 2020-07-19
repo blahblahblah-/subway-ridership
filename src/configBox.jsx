@@ -131,7 +131,7 @@ class ConfigBox extends React.Component {
             </Grid.Row>
             <Grid.Row style={{ padding: 0 }}>
               <Grid.Column style={{ lineHeight: '30px'}}>
-                <Checkbox label={isMobile ? 'Compare' : 'Compare with another date'} name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
+                <Checkbox label={isMobile ? 'Compare' : 'Compare with'} name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
               </Grid.Column>
               <Grid.Column style={{ paddingLeft: 0 }}>
                 {

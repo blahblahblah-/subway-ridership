@@ -25,7 +25,7 @@ class Graph extends React.Component {
   }
 
   render() {
-    const { isMobile, data } = this.props;
+    const { isMobile, data, durationMode } = this.props;
     const theme = {
       axis: {
         ticks: {
@@ -61,7 +61,7 @@ class Graph extends React.Component {
           top: 0,
           right: 0,
           bottom: 100,
-          left: isMobile ? 0 : 60
+          left: isMobile ? 0 : 70
         }}
         data={data}
         enableArea={false}
@@ -69,9 +69,10 @@ class Graph extends React.Component {
         xScale={{
           type: 'time',
           format: '%Y-%m-%d',
-          precision: 'day',
+          useUTC: false,
+          precision: durationMode === 'months' ? 'month' : 'day',
         }}
-        xFormat="time:%Y-%m-%d"
+        xFormat={ durationMode === 'months' ? "time:%Y-%m" : "time:%Y-%m-%d" }
         yFormat={format}
         enablePoints={false}
         enableGridY={true}
@@ -80,7 +81,8 @@ class Graph extends React.Component {
         useMesh={true}
         enableSlices={false}
         axisBottom={{
-          format: '%Y-%m-%d',
+          format: durationMode === 'months' ? "%b %Y" : "%Y-%m-%d",
+          tickValues: 'every month',
           orient: "bottom",
           tickSize: 5,
           tickPadding: 5,

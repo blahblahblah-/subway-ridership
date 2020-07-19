@@ -2,7 +2,7 @@ import React from 'react';
 
 import Graph from './graph';
 
-class StationDetailsGraph extends React.Component {
+class StationGraph extends React.Component {
   graphData() {
     const { complexData, selectedYear } = this.props;
 
@@ -23,11 +23,11 @@ class StationDetailsGraph extends React.Component {
   }
 
   render() {
-    const { isMobile, handleGraphClick, width, height } = this.props;
+    const { isMobile, handleGraphClick, width, height, durationMode } = this.props;
     return (
-      <Graph isMobile={isMobile} handleGraphClick={handleGraphClick} data={this.graphData()} width={width} height={height} />
+      <Graph isMobile={isMobile} durationMode={durationMode} handleGraphClick={handleGraphClick} data={this.graphData()} width={width} height={height} />
     )
   }
 }
 
-export default StationDetailsGraph;
+export default StationGraph;

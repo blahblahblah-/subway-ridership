@@ -4,9 +4,9 @@ import moment from 'moment';
 
 import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
-import StationDetailsGraph from './stationDetailsGraph';
+import StationGraph from './stationGraph';
 import StationRoutes from './stationRoutes';
-import { selectYearOptions } from './utils';
+import { selectYearOptions, durationModeAdjective } from './utils';
 
 import stations from './data/stations.json';
 
@@ -32,6 +32,7 @@ class StationDetails extends React.Component {
     const {
       isMobile,
       selectedDate,
+      durationMode,
       compareWithDate,
       selectedStation,
       selectedStationObj,
@@ -61,29 +62,29 @@ class StationDetails extends React.Component {
         <Divider hidden />
         {
           compareWithDate ?
-            <DetailsCompareDates isMobile={isMobile} selectedDate={selectedDate} selectedDateObj={selectedStationObj[selectedDate]}
+            <DetailsCompareDates isMobile={isMobile} selectedDate={selectedDate} selectedDateObj={selectedStationObj[selectedDate]} durationMode={durationMode}
             compareWithDate={compareWithDate} compareWithDateObj={selectedStationObj[compareWithDate]} /> :
-            <DetailsDate isMobile={isMobile} data={selectedStationObj[selectedDate]} selectedDate={selectedDate} />
+            <DetailsDate isMobile={isMobile} data={selectedStationObj[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
         }
         <Divider horizontal>
           <Header size='medium' className='details-graph-header'>
             <div>
-              Daily Counts in&nbsp;
+              { durationModeAdjective(durationMode) } Counts in&nbsp;
             </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
             <Modal trigger={<div className='icon-container'><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
               <Modal.Header>
-                Daily Counts in&nbsp;
+                { durationModeAdjective(durationMode) } Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
               </Modal.Header>
               <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
-                <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
+                <StationGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
               </Responsive>
             </Modal>
           </Header>
         </Divider>
         <div>
-          <StationDetailsGraph isMobile={isMobile} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
+          <StationGraph isMobile={isMobile} durationMode={durationMode} complexData={selectedStationObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
         </div>
       </div>
     )

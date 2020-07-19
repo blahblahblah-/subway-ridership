@@ -6,7 +6,7 @@ import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
 import StationList from './stationList';
-import { selectYearOptions } from './utils';
+import { selectYearOptions, durationModeAdjective } from './utils';
 
 import overall from './data/overall.json';
 
@@ -20,13 +20,13 @@ class OverallDetails extends React.Component {
   }
 
   combinedDetails() {
-    const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate } = this.props;
+    const { nyct, sir, rit, pth, jfk, selectedDate, compareWithDate, durationMode } = this.props;
     const settings = { 'NYCT': nyct, 'SIR': sir, 'RIT': rit, 'PTH': pth, 'JFK': jfk};
     const results = {};
     [selectedDate, compareWithDate].filter((date) => date).forEach((date) => {
       results[date] = {};
       ['entries', 'exits'].forEach((field) => {
-        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overall[system] && overall[system][date] ? overall[system][date][field] : 0).reduce((acc, cur) => acc + cur, 0);
+        results[date][field] = Object.keys(settings).filter((system) => settings[system]).map((system) => overall[system][durationMode] && overall[system][durationMode][date] ? overall[system][durationMode][date][field] : 0).reduce((acc, cur) => acc + cur, 0);
       });
     })
     return results;
@@ -58,6 +58,7 @@ class OverallDetails extends React.Component {
       rit,
       pth,
       jfk,
+      durationMode,
       isMobile,
       selectedDate,
       selectedDateObj,
@@ -92,11 +93,11 @@ class OverallDetails extends React.Component {
                 return (
                   <Tab.Pane attached={false}>
                     { compareWithDate ?
-                      <DetailsCompareDates isMobile={isMobile}
+                      <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
                         selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
                         compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
                       /> :
-                      <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} />
+                      <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
                     }
                   </Tab.Pane>
                 )
@@ -120,22 +121,24 @@ class OverallDetails extends React.Component {
         <Divider horizontal>
           <Header size='medium' className='details-graph-header'>
             <div>
-              Daily Counts in&nbsp;
+              { durationModeAdjective(durationMode) } Counts in&nbsp;
             </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
             <Modal trigger={<div className='icon-container'><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
               <Modal.Header>
-                Daily Counts in&nbsp;
+                { durationModeAdjective(durationMode) } Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
               </Modal.Header>
               <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
-                <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
+                <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} durationMode={durationMode}
+                  handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
               </Responsive>
             </Modal>
           </Header>
         </Divider>
         <div>
-          <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
+          <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} durationMode={durationMode}
+            handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
          </div>
       </div>
     )

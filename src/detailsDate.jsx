@@ -1,13 +1,14 @@
 import React from 'react';
 import { Statistic, Divider, Header } from "semantic-ui-react";
+import { durationModeDate } from './utils';
 
 class DetailsDate extends React.Component {
   render() {
-    const { data, selectedDate, isMobile } = this.props;
+    const { data, selectedDate, isMobile, durationMode } = this.props;
     return (
       <div>
         <Divider horizontal>
-          <Header size='medium'>{selectedDate}</Header>
+          <Header size='medium'>{ durationModeDate(selectedDate, durationMode, 'big') }</Header>
         </Divider>
         <Statistic.Group widths={2} size={isMobile ? 'mini' : 'tiny'}>
           <Statistic>

@@ -11,7 +11,8 @@ import stations from './data/stations.json';
 import overall from './data/overall.json';
 
 const center = [-73.9905, 40.73925];
-const dates = Object.keys(overall['NYCT']).sort();
+const dates = Object.keys(overall['NYCT'].days).sort();
+const weeks = Object.keys(overall['NYCT'].weeks).sort();
 const firstDate = dates[0];
 const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
@@ -26,7 +27,9 @@ class Mapbox extends React.Component {
       selectedDate: lastDate,
       selectedDateObj: null,
       selectedStation: null,
+      selectedStationData: null,
       selectedStationObj: null,
+      durationMode: 'days',
       mode: 'entries',
       compareWithAnotherDate: false,
       compareWithDate: moment(lastDate).subtract(52, 'week').format('YYYY-MM-DD'),
@@ -75,12 +78,12 @@ class Mapbox extends React.Component {
   }
 
   refreshMap() {
-    const { selectedDate, compareWithDate, compareWithAnotherDate } = this.state;
+    const { selectedDate, compareWithDate, compareWithAnotherDate, durationMode } = this.state;
 
-    import(`./data/dates/${selectedDate}.json`)
+    import(`./data/${durationMode}/${selectedDate}.json`)
       .then(data => {
         if (compareWithAnotherDate) {
-          import(`./data/dates/${compareWithDate}.json`)
+          import(`./data/${durationMode}/${compareWithDate}.json`)
             .then(compareWithData => {
                this.setState({ selectedDateObj: data, compareWithDateObj: compareWithData, isDataLoaded: true}, this.updateMap);
             });
@@ -91,11 +94,11 @@ class Mapbox extends React.Component {
   }
 
   selectStation() {
-    const { selectedStation } = this.state;
+    const { selectedStation, durationMode } = this.state;
 
     import(`./data/complexId/${selectedStation}.json`)
       .then(data => {
-        this.setState({ selectedStationObj: data, isDataLoaded: true}, this.navigateToStation);
+        this.setState({ selectedStationData: data, selectedStationObj: data[durationMode], isDataLoaded: true}, this.navigateToStation);
       });
   }
 
@@ -113,6 +116,7 @@ class Mapbox extends React.Component {
       selectedDateObj,
       compareWithAnotherDate,
       compareWithDateObj,
+      durationMode,
       mode,
       nyct,
       sir,
@@ -158,10 +162,18 @@ class Mapbox extends React.Component {
       this.map.addSource('data', geoJson);
     }
 
+    let displayFactor = 1;
+
+    if (durationMode === 'weeks') {
+      displayFactor = 7;
+    } else if (durationMode === 'months') {
+      displayFactor = 30
+    }
+
     let circleRadiusValue = [
       'interpolate', ['linear'], ['zoom'],
-      10, ['max', ['min', ['/', ['get', mode], 5000], 5], 3],
-      14, ['max', ['min', ['/', ['get', mode], 2000], 50], 5]
+      10, ['max', ['min', ['/', ['get', mode], 5000 * displayFactor], 5], 3],
+      14, ['max', ['min', ['/', ['get', mode], 2000 * displayFactor], 50], 5]
     ];
 
     if (compareWithAnotherDate) {
@@ -221,24 +233,47 @@ class Mapbox extends React.Component {
 
   handleModeClick = (e, { name }) => this.setState({ mode: name }, this.refreshMap);
 
-  handleDateInputChange = (event, {name, value}) => {
-    if (name === 'selectedDate') {
-      return this.selectDate(value);
-    }
+  handleDurationModeClick = (e, { name }) => {
+    const { selectedDate, compareWithDate, selectedStationData } = this.state;
+    let newDate = selectedDate;
+    let newCompareWithDate = compareWithDate;
 
-    this.setState({compareWithDate: value}, this.refreshMap);
+    if (name === 'weeks') {
+      newDate = moment(selectedDate).endOf('week').subtract(1, 'day').format('YYYY-MM-DD');
+      newCompareWithDate = moment(compareWithDate).endOf('week').subtract(1, 'day').format('YYYY-MM-DD');
+    } else if (name === 'months') {
+      newDate = moment(selectedDate).startOf('month').format('YYYY-MM-DD');
+      newCompareWithDate = moment(compareWithDate).startOf('month').format('YYYY-MM-DD');
+    }
+    this.setState({ durationMode: name, selectedDate: newDate, compareWithDate: newCompareWithDate, selectedStationObj: selectedStationData && selectedStationData[name] }, this.refreshMap);
+  }
+
+  handleDateInputChange = (date) => {
+    const dateObj = moment(date);
+    this.selectDate(dateObj.format('YYYY-MM-DD'));
+  }
+
+  handleCompareDateInputChange = (date) => {
+    const dateObj = moment(date);
+    this.setState({compareWithDate: dateObj.format('YYYY-MM-DD')}, this.refreshMap);
   }
 
   handleYearChange = (e, { value }) => {
-    const { selectedDate } = this.state;
+    const { selectedDate, durationMode } = this.state;
     const lastDateObj = moment(lastDate);
     let newDate = moment(selectedDate).year(value);
 
     if (newDate > lastDateObj) {
-      this.selectDate(lastDateObj.format('YYYY-MM-DD'));
-    } else {
-      this.selectDate(newDate.format('YYYY-MM-DD'));
+      newDate = lastDateObj
     }
+
+    if (durationMode === 'weeks') {
+      newDate.endOf('week').subtract(1, 'day');
+    } else if (durationMode === 'months') {
+      newDate.startOf('month');
+    }
+
+    this.selectDate(newDate.format('YYYY-MM-DD'));
   }
 
   handleOnUpdate = (e, { width }) => {
@@ -272,16 +307,36 @@ class Mapbox extends React.Component {
   }
 
   selectDate = (date) => {
-    const newState = { selectedDate: date };
+    const { durationMode } = this.state;
     const newDate = moment(date);
+
+    if (!newDate.isValid()) {
+      return;
+    }
+
+    const newState = { selectedDate: moment(date).format('YYYY-MM-DD') };
     const nextYearToday = newDate.clone().add(52, 'week');
 
     if (newDate.year() !== firstYear) {
-      newState['compareWithDate'] = newDate.subtract(52, 'week').format('YYYY-MM-DD');
+      if (durationMode === 'months') {
+        newState['compareWithDate'] = newDate.subtract(1, 'year').format('YYYY-MM-DD');
+      } else {
+        newState['compareWithDate'] = newDate.subtract(52, 'week').format('YYYY-MM-DD');
+      }
     } else if (nextYearToday <= moment(lastDate)) {
-      newState['compareWithDate'] = newDate.add(52, 'week').format('YYYY-MM-DD');
+      if (durationMode === 'months') {
+        newState['compareWithDate'] = newDate.add(1, 'year').format('YYYY-MM-DD');
+      } else {
+        newState['compareWithDate'] = newDate.add(52, 'week').format('YYYY-MM-DD');
+      }
     } else {
-      newState['compareWithDate'] = newDate.add(1, 'day').format('YYYY-MM-DD');
+      if (durationMode === 'months') {
+        newState['compareWithDate'] = newDate.add(1, 'month').format('YYYY-MM-DD');
+      } else if (durationMode === 'weeks') {
+        newState['compareWithDate'] = newDate.add(1, 'week').format('YYYY-MM-DD');
+      } else {
+        newState['compareWithDate'] = newDate.add(1, 'day').format('YYYY-MM-DD');
+      }
     }
     this.setState(newState, this.refreshMap);
   }
@@ -295,6 +350,7 @@ class Mapbox extends React.Component {
       selectedDateObj,
       selectedStation,
       selectedStationObj,
+      durationMode,
       mode,
       compareWithAnotherDate,
       compareWithDate,
@@ -309,11 +365,12 @@ class Mapbox extends React.Component {
       <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
         <div ref={el => this.mapContainer = el} className='mapbox'>
         </div>
-        <ConfigBox mode={mode} handleModeClick={this.handleModeClick} isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
+        <ConfigBox mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
+          isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
-          handleDateInputChange={this.handleDateInputChange} />
+          handleDateInputChange={this.handleDateInputChange} handleCompareDateInputChange={this.handleCompareDateInputChange} />
         { (!isMobile || isDataBoxVisible) &&
-          <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
+          <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} durationMode={durationMode}
             selectedStation={selectedStation} selectedStationObj={selectedStationObj} isMobile={isMobile}
             selectedDate={selectedDate} selectedDateObj={selectedDateObj}
             compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Statistic, Divider, Header } from "semantic-ui-react";
+import { durationModeDate } from './utils';
 
 class DetailsCompareDates extends React.Component {
   render() {
-    const { isMobile, selectedDate, compareWithDate, selectedDateObj, compareWithDateObj } = this.props;
+    const { isMobile, selectedDate, compareWithDate, selectedDateObj, compareWithDateObj, durationMode } = this.props;
     const compareWithEntries = compareWithDateObj ? compareWithDateObj.entries : 0;
     const selectedEntries = selectedDateObj ? selectedDateObj.entries : 0;
     const entriesChange = (selectedEntries - compareWithEntries) / compareWithEntries * 100;
@@ -18,11 +19,11 @@ class DetailsCompareDates extends React.Component {
         <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
           <Statistic>
             <Statistic.Value>{ compareWithEntries.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ compareWithDate }</Statistic.Label>
+            <Statistic.Label>{ durationModeDate(compareWithDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
           <Statistic>
             <Statistic.Value>{ selectedEntries.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ selectedDate }</Statistic.Label>
+            <Statistic.Label>{ durationModeDate(selectedDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
           <Statistic color={entriesChange >= 0 ? "green" : "red" }>
             <Statistic.Value>{ entriesChange >= 0 && '+'}{ Math.round(entriesChange * 100) / 100}%</Statistic.Value>
@@ -35,11 +36,11 @@ class DetailsCompareDates extends React.Component {
         <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
           <Statistic>
             <Statistic.Value>{ compareWithExits.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ compareWithDate }</Statistic.Label>
+            <Statistic.Label>{ durationModeDate(compareWithDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
           <Statistic>
             <Statistic.Value>{ selectedExits.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ selectedDate }</Statistic.Label>
+            <Statistic.Label>{ durationModeDate(selectedDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
           <Statistic color={exitsChange >= 0 ? "green" : "red" }>
             <Statistic.Value>{ exitsChange >= 0 && '+'}{ Math.round(exitsChange * 100) / 100}%</Statistic.Value>

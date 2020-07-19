@@ -66,7 +66,7 @@ class DataBox extends React.Component {
              }
           </Segment>
           <Header inverted as='h5' floated='left' style={{margin: "10px 5px"}}>
-            Last updated {timestamp && (new Date(timestamp)).toLocaleTimeString('en-US')}.<br />
+            Last updated {timestamp && (new Date(timestamp)).toLocaleString('en-US')}.<br />
             Uses dataset from <a href='https://qri.cloud/nyc-transit-data/turnstile_daily_counts_2020' target='_blank' rel="noopener noreferrer">NYC Subway Turnstile Counts</a> on qri.<br />
             Created by <a href='https://sunny.ng' target='_blank' rel="noopener noreferrer">Sunny Ng</a>.<br />
             <a href='https://github.com/blahblahblah-/subway-ridership' target='_blank' rel="noopener noreferrer">Source code</a>.

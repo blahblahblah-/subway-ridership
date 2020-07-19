@@ -6,12 +6,14 @@ import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 
 const significantDates = [
-  ['2020-03-12'], // geatherings banned
-  ['2020-03-16'], // NYC schools close
-  ['2020-03-22'], // PAUSE
-  ['2020-05-06'], // subway suspends overnight service
-  ['2020-06-01'], // curfew
-  ['2020-06-08']  // phase 1
+  '2020-03-12', // geatherings banned
+  '2020-03-16', // NYC schools close
+  '2020-03-22', // PAUSE
+  '2020-05-06', // subway suspends overnight service
+  '2020-06-01', // curfew
+  '2020-06-08', // phase 1
+  '2020-06-22', // phase 2
+  '2020-07-06', // phase 3
 ]
 
 class ConfigBox extends React.Component {
@@ -37,6 +39,8 @@ class ConfigBox extends React.Component {
     const { durationMode, firstDate, lastDate, selectedDate, compareWithDate } = this.props;
     const outerClassName = disabled ? 'disabled ui mini icon input' : 'ui mini icon input';
     const dateValue = isCompareWithDate ? compareWithDate : selectedDate;
+    const highlightDates = significantDates.map((d) => moment(d).toDate());
+
     if (durationMode === 'days') {
       return (
         <div className={outerClassName}>
@@ -51,7 +55,7 @@ class ConfigBox extends React.Component {
             onChange={onChange}
             disabled={disabled}
             showMonthDropdown showYearDropdown
-            highlightDates={significantDates.map((d) => new Date(`${d}Z-04:00`))}
+            highlightDates={highlightDates}
           />
         </div>
       )
@@ -69,7 +73,7 @@ class ConfigBox extends React.Component {
             onChange={onChange}
             disabled={disabled}
             showMonthDropdown showYearDropdown
-            highlightDates={significantDates.map((d) => new Date(`${d}Z-04:00`))}
+            highlightDates={highlightDates}
           />
         </div>
       )

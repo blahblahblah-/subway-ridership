@@ -1,6 +1,7 @@
 import React from 'react';
-import { Checkbox, Divider, Header, Tab, Dropdown, Modal, Icon, Responsive } from "semantic-ui-react";
+import { Checkbox, Divider, Header, Tab, Dropdown, Modal, Icon, Responsive, Menu } from "semantic-ui-react";
 import moment from 'moment';
+import { Route, Switch, Link } from "react-router-dom";
 
 import OverallGraph from './overallGraph';
 import DetailsDate from './detailsDate';
@@ -51,7 +52,7 @@ class OverallDetails extends React.Component {
     ];
   }
 
-  render() {
+  renderTab(index) {
     const {
       nyct,
       sir,
@@ -64,17 +65,63 @@ class OverallDetails extends React.Component {
       selectedDateObj,
       compareWithDate,
       compareWithDateObj,
+      mode,
+    } = this.props;
+    const data = this.combinedDetails();
+    return (
+      <Tab menu={{secondary: true, pointing: true}} activeIndex={index} panes={
+        [
+          {
+            menuItem: <Menu.Item as={Link} to='/' key='overall'>Overall</Menu.Item>,
+            render: () => {
+              return (
+                <Tab.Pane attached={false}>
+                  { compareWithDate ?
+                    <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
+                      selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
+                      compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
+                    /> :
+                    <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
+                  }
+                </Tab.Pane>
+              )
+            },
+          },
+          {
+            menuItem: <Menu.Item as={Link} to='/stations' key='stations'>Stations</Menu.Item>,
+            render: () => {
+              return (
+                <Tab.Pane attached={false}>
+                  <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
+                    selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+                    compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj} />
+                </Tab.Pane>
+              )
+            },
+          },
+        ]
+      }/>
+    )
+  }
+
+  render() {
+    const {
+      nyct,
+      sir,
+      rit,
+      pth,
+      jfk,
+      durationMode,
+      isMobile,
+      selectedDate,
       firstYear,
       lastYear,
-      handleSelectStation,
       handleToggle,
       handleGraphClick,
       handleYearChange,
-      mode,
     } = this.props;
     const { width, height } = this.state;
     const selectedYear = moment(selectedDate).year();
-    const data = this.combinedDetails();
     return (
       <div className='overall-details'>
         {
@@ -85,39 +132,10 @@ class OverallDetails extends React.Component {
           })
         }
         <Divider className='tab-separator' />
-        <Tab menu={{secondary: true, pointing: true}} panes={
-          [
-            {
-              menuItem: 'Overall',
-              render: () => {
-                return (
-                  <Tab.Pane attached={false}>
-                    { compareWithDate ?
-                      <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
-                        selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
-                        compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
-                      /> :
-                      <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
-                    }
-                  </Tab.Pane>
-                )
-              },
-            },
-            {
-              menuItem: 'Stations',
-              render: () => {
-                return (
-                  <Tab.Pane attached={false}>
-                    <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
-                      selectedDate={selectedDate} selectedDateObj={selectedDateObj}
-                      compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj}
-                      handleSelectStation={handleSelectStation} />
-                  </Tab.Pane>
-                )
-              },
-            },
-          ]
-        }/>
+        <Switch>
+          <Route exact path='/stations' render={() => this.renderTab(1)} />
+          <Route render={() => this.renderTab(0)} />
+        </Switch>
         <Divider horizontal>
           <Header size='medium' className='details-graph-header'>
             <div>

@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import { debounce } from 'lodash';
 import { Responsive } from 'semantic-ui-react';
 import moment from 'moment';
+import { withRouter } from "react-router-dom";
 
 import ConfigBox from './configBox';
 import DataBox from './dataBox';
@@ -26,9 +27,6 @@ class Mapbox extends React.Component {
     this.state = {
       selectedDate: lastDate,
       selectedDateObj: null,
-      selectedStation: null,
-      selectedStationData: null,
-      selectedStationObj: null,
       durationMode: 'days',
       mode: 'entries',
       compareWithAnotherDate: false,
@@ -91,24 +89,6 @@ class Mapbox extends React.Component {
           this.setState({ selectedDateObj: data, compareWithDateObj: null, isDataLoaded: true}, this.updateMap);
         }
       });
-  }
-
-  selectStation() {
-    const { selectedStation, durationMode } = this.state;
-
-    import(`./data/complexId/${selectedStation}.json`)
-      .then(data => {
-        this.setState({ selectedStationData: data, selectedStationObj: data[durationMode], isDataLoaded: true}, this.navigateToStation);
-      });
-  }
-
-  navigateToStation() {
-    const { selectedStation } = this.state;
-
-    this.map.easeTo({
-      center: stations[selectedStation].coordinates,
-      bearing: 29,
-    });
   }
 
   updateMap() {
@@ -225,7 +205,8 @@ class Mapbox extends React.Component {
   }
 
   debounceSelectStation = debounce((station) => {
-    this.setState({ selectedStation: station, isDataBoxVisible: true }, this.selectStation);
+    this.props.history.push(`/stations/${station}`);
+    this.setState({ isDataBoxVisible: true });
   }, 300, {
     'leading': true,
     'trailing': false
@@ -234,7 +215,7 @@ class Mapbox extends React.Component {
   handleModeClick = (e, { name }) => this.setState({ mode: name }, this.refreshMap);
 
   handleDurationModeClick = (e, { name }) => {
-    const { selectedDate, compareWithDate, selectedStationData } = this.state;
+    const { selectedDate, compareWithDate } = this.state;
     let newDate = selectedDate;
     let newCompareWithDate = compareWithDate;
 
@@ -245,7 +226,7 @@ class Mapbox extends React.Component {
       newDate = moment(selectedDate).startOf('month').format('YYYY-MM-DD');
       newCompareWithDate = moment(compareWithDate).startOf('month').format('YYYY-MM-DD');
     }
-    this.setState({ durationMode: name, selectedDate: newDate, compareWithDate: newCompareWithDate, selectedStationObj: selectedStationData && selectedStationData[name] }, this.refreshMap);
+    this.setState({ durationMode: name, selectedDate: newDate, compareWithDate: newCompareWithDate }, this.refreshMap);
   }
 
   handleDateInputChange = (date) => {
@@ -287,23 +268,19 @@ class Mapbox extends React.Component {
     }
   }
 
-  handleBack = () => {
-    this.setState({ selectedStation: null });
-  }
-
-  handleSelectStation = (station) => {
-    const { selectedStation } = this.state;
-    if (selectedStation !== station) {
-      this.setState({ selectedStation: station }, this.selectStation);
-    }
-  }
-
   handleToggleDataBox = () => {
     this.setState({ isDataBoxVisible: !this.state.isDataBoxVisible });
   }
 
   handleGraphClick = (date) => {
     this.selectDate(date);
+  }
+
+  handleStationChange = (stationId) => {
+    this.map.easeTo({
+      center: stations[stationId].coordinates,
+      bearing: 29,
+    });
   }
 
   selectDate = (date) => {
@@ -348,8 +325,6 @@ class Mapbox extends React.Component {
       isDataLoaded,
       selectedDate,
       selectedDateObj,
-      selectedStation,
-      selectedStationObj,
       durationMode,
       mode,
       compareWithAnotherDate,
@@ -371,16 +346,16 @@ class Mapbox extends React.Component {
           handleDateInputChange={this.handleDateInputChange} handleCompareDateInputChange={this.handleCompareDateInputChange} />
         { (!isMobile || isDataBoxVisible) &&
           <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} durationMode={durationMode}
-            selectedStation={selectedStation} selectedStationObj={selectedStationObj} isMobile={isMobile}
+            isMobile={isMobile}
             selectedDate={selectedDate} selectedDateObj={selectedDateObj}
             compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
             firstYear={firstYear} lastYear={lastYear} handleToggle={this.handleToggle} isDataLoaded={isDataLoaded}
             handleYearChange={this.handleYearChange}
-            handleSelectStation={this.handleSelectStation} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
+            handleStationChange={this.handleStationChange} handleGraphClick={this.handleGraphClick} />
           }
       </Responsive>
     )
   }
 }
 
-export default Mapbox;
+export default withRouter(Mapbox);

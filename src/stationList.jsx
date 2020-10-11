@@ -1,5 +1,7 @@
 import React from 'react';
 import { List, Header, Input } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import StationRoutes from './stationRoutes';
 
@@ -42,15 +44,14 @@ class StationList extends React.Component {
     )
   }
 
-  handleClick = (e, data) => {
-    const { handleSelectStation } = this.props;
-    handleSelectStation(data['data-station-id']);
-  }
-
   renderListItems() {
     const { nyct, sir, rit, pth, jfk, selectedDateObj, compareWithDate, compareWithDateObj } = this.props;
     const { query } = this.state;
     const systems = {NYCT: nyct, SIR: sir, RIT: rit, PTH: pth, JFK: jfk };
+
+    if (!selectedDateObj) {
+      return;
+    }
 
     return Object.keys(stations).filter((station) => {
       return systems[stations[station].system] && selectedDateObj[station] && (!compareWithDate || compareWithDateObj[station]);
@@ -70,7 +71,7 @@ class StationList extends React.Component {
       const station = obj.id;
       const stationObj = stations[station];
       return (
-        <List.Item key={station} className='station-list-item' data-station-id={station} onClick={this.handleClick}>
+        <List.Item as={Link} key={station} className='station-list-item' data-station-id={station} to={`/stations/${station}`}>
           <List.Content floated='left' className='station-name'>
             <Header as='h5'>
               { stationObj.name }
@@ -92,6 +93,20 @@ class StationList extends React.Component {
   render() {
     return (
       <div className='station-list'>
+        <Helmet>
+          <title>NYC Subway Ridership - Stations</title>
+          <meta property="og:url" content="https://www.subwayridership.nyc/stations" />
+          <meta name="twitter:url" content="https://www.subwayridership.nyc/stations" />
+          <link rel="canonical" href="https://www.subwayridership.nyc/stations" />
+          <meta property="og:title" content="NYC Subway Ridership - Stations" />
+          <meta name="twitter:title" content="NYC Subway Ridership - Stations" />
+          <meta
+        name="description"
+        content="List of New York City subway stations with their daily, weekly, and monthly ridership. Data derived from MTA turnstile usage data."
+      />
+          <meta property="og:description" content="List of New York City subway stations with their daily, weekly, and monthly ridership. Data derived from MTA turnstile usage data." />
+          <meta name="twitter:description" content="List of New York City subway stations with their daily, weekly, and monthly ridership. Data derived from MTA turnstile usage data." />
+        </Helmet>
         <Input icon='search' placeholder='Search...' onChange={this.handleSearch} className="station-search" />
         <List divided relaxed selection>
           { this.renderListItems() }

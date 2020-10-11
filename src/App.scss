@@ -164,8 +164,12 @@ body {
 .station-details .top {
   display: flex;
 
-  h3.ui.header {
-    margin-bottom: 5px;
+  .heading {
+    flex-grow: 1000;
+
+    h3.ui.header {
+      margin-bottom: 5px;
+    }
   }
 }
 

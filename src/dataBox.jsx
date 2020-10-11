@@ -1,17 +1,20 @@
 import React from 'react';
 import { Segment, Header, Dimmer, Loader } from "semantic-ui-react";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import OverallDetails from './overallDetails';
 import StationDetails from './stationDetails';
 
+import stations from './data/stations.json';
 import timestamp from './data/timestamp.json';
 
 class DataBox extends React.Component {
-  componentDidUpdate(prevProps) {
-    const { selectedStation } = this.props;
-    if (prevProps.selectedStation !== selectedStation) {
+  handleStationChange = (stationId) => {
+    const { handleStationChange } = this.props;
+    if (this.dataBox) {
       this.dataBox.scrollTop = 0;
     }
+    handleStationChange(stationId);
   }
 
   render() {
@@ -24,18 +27,14 @@ class DataBox extends React.Component {
       isMobile,
       isDataLoaded,
       handleToggle,
-      handleSelectStation,
       durationMode,
       mode,
-      selectedStation,
-      selectedStationObj,
       selectedDate,
       selectedDateObj,
       compareWithDate,
       compareWithDateObj,
       firstYear,
       lastYear,
-      handleBack,
       handleGraphClick,
       handleYearChange,
     } = this.props;
@@ -49,21 +48,31 @@ class DataBox extends React.Component {
         }
         <div className='inner-databox' ref={el => this.dataBox = el}>
           <Segment>
-            { selectedStation && selectedStationObj ?
-                <StationDetails isMobile={isMobile}
-                  selectedStation={selectedStation} selectedStationObj={selectedStationObj}
-                  selectedDate={selectedDate} durationMode={durationMode}
-                  compareWithDate={compareWithDate}
-                  firstYear={firstYear} lastYear={lastYear}
-                  handleYearChange={handleYearChange} handleBack={handleBack}
-                  handleGraphClick={handleGraphClick} /> :
+            <Switch>
+              <Route path='/stations/:stationId' render={(props) => {
+                if (stations[props.match.params.stationId]) {
+                  return (
+                    <StationDetails isMobile={isMobile}
+                      selectedDate={selectedDate} durationMode={durationMode} stationId={props.match.params.stationId}
+                      compareWithDate={compareWithDate}
+                      firstYear={firstYear} lastYear={lastYear}
+                      handleYearChange={handleYearChange}
+                      handleStationChange={this.handleStationChange}
+                      handleGraphClick={handleGraphClick} />
+                    );
+                }
+                return (<Redirect to="/" />);
+              }} />
+              <Route exact path={['/', '/stations']} render={() => (
                 <OverallDetails isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} durationMode={durationMode}
                   selectedDate={selectedDate} selectedDateObj={selectedDateObj}
                   compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj}
                   firstYear={firstYear} lastYear={lastYear}
                   handleYearChange={handleYearChange}
-                  handleSelectStation={handleSelectStation} handleToggle={handleToggle} handleGraphClick={handleGraphClick} />
-             }
+                  handleToggle={handleToggle} handleGraphClick={handleGraphClick} />
+              )} />
+              <Redirect to="/" />
+            </Switch>
           </Segment>
           <Header inverted as='h5' floated='left' style={{margin: "10px 5px"}}>
             Last updated {timestamp && (new Date(timestamp)).toLocaleString('en-US')}.<br />

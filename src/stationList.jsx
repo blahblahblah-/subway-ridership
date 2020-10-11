@@ -1,11 +1,18 @@
 import React from 'react';
-import { List, Header } from "semantic-ui-react";
+import { List, Header, Input } from "semantic-ui-react";
 
 import StationRoutes from './stationRoutes';
 
 import stations from './data/stations.json';
 
 class StationList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+    };
+  }
+
   getData(station) {
     const { selectedDateObj, compareWithDate, compareWithDateObj, mode } = this.props;
     if (!compareWithDate) {
@@ -42,10 +49,13 @@ class StationList extends React.Component {
 
   renderListItems() {
     const { nyct, sir, rit, pth, jfk, selectedDateObj, compareWithDate, compareWithDateObj } = this.props;
+    const { query } = this.state;
     const systems = {NYCT: nyct, SIR: sir, RIT: rit, PTH: pth, JFK: jfk };
 
     return Object.keys(stations).filter((station) => {
       return systems[stations[station].system] && selectedDateObj[station] && (!compareWithDate || compareWithDateObj[station]);
+    }).filter((station) => {
+      return query.length < 1 || stations[station].name.toUpperCase().includes(query.toUpperCase())
     }).map((station) => {
       return {
         id: station,
@@ -75,11 +85,18 @@ class StationList extends React.Component {
     });
   }
 
+  handleSearch = (e, data) => {
+    this.setState({ query: data.value }, this.renderListItems);
+  }
+
   render() {
     return (
-      <List divided relaxed selection>
-        { this.renderListItems() }
-      </List>
+      <div className='station-list'>
+        <Input icon='search' placeholder='Search...' onChange={this.handleSearch} className="station-search" />
+        <List divided relaxed selection>
+          { this.renderListItems() }
+        </List>
+      </div>
     )
   }
 }

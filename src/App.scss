@@ -169,26 +169,32 @@ body {
   }
 }
 
-.station-list-item {
-  .data {
-    color: #000000;
+.station-list {
+  .station-search {
+    width: 100%;
+  }
 
-    &.red {
-      color: #db2828;
+  .station-list-item {
+    .data {
+      color: #000000;
+
+      &.red {
+        color: #db2828;
+      }
+
+      &.green {
+        color: #21ba45;
+      }
     }
 
-    &.green {
-      color: #21ba45;
+    h5.ui.header {
+      line-height: 28px;
     }
   }
 
-  h5.ui.header {
+  .ui.list .item.station-list-item .content.data {
     line-height: 28px;
-  }
-}
-
-.ui.list .item.station-list-item .content.data {
-  line-height: 28px;
+  } 
 }
 
 .overall-details {

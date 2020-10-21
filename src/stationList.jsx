@@ -55,8 +55,6 @@ class StationList extends React.Component {
 
     return Object.keys(stations).filter((station) => {
       return systems[stations[station].system] && selectedDateObj[station] && (!compareWithDate || compareWithDateObj[station]);
-    }).filter((station) => {
-      return query.length < 1 || stations[station].name.toUpperCase().includes(query.toUpperCase())
     }).map((station) => {
       return {
         id: station,
@@ -67,6 +65,11 @@ class StationList extends React.Component {
         return a.data - b.data;
       }
       return b.data - a.data;
+    }).map((obj, index) => {
+      obj.rank = index + 1;
+      return obj;
+    }).filter((obj) => {
+      return query.length < 1 || stations[obj.id].name.toUpperCase().includes(query.toUpperCase())
     }).map((obj) => {
       const station = obj.id;
       const stationObj = stations[station];
@@ -74,7 +77,7 @@ class StationList extends React.Component {
         <List.Item as={Link} key={station} className='station-list-item' data-station-id={station} to={`/stations/${station}`}>
           <List.Content floated='left' className='station-name'>
             <Header as='h5'>
-              { stationObj.name }
+              {obj.rank}. { stationObj.name }
             </Header>
           </List.Content>
           <List.Content floated='left'>

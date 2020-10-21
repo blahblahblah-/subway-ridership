@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Divider, Header, Tab, Dropdown, Modal, Icon, Responsive, Menu } from "semantic-ui-react";
+import { Checkbox, Divider, Header, Dropdown, Modal, Icon, Responsive, Menu } from "semantic-ui-react";
 import moment from 'moment';
 import { Route, Switch, Link } from "react-router-dom";
 
@@ -53,58 +53,15 @@ class OverallDetails extends React.Component {
   }
 
   renderTab(index) {
-    const {
-      nyct,
-      sir,
-      rit,
-      pth,
-      jfk,
-      durationMode,
-      isMobile,
-      selectedDate,
-      selectedDateObj,
-      compareWithDate,
-      compareWithDateObj,
-      mode,
-    } = this.props;
-    const data = this.combinedDetails();
     return (
-      <Tab menu={{secondary: true, pointing: true}} activeIndex={index} panes={
-        [
-          {
-            menuItem: <Menu.Item as={Link} to='/' key='overall'>Overall</Menu.Item>,
-            render: () => {
-              return (
-                <Tab.Pane attached={false}>
-                  { compareWithDate ?
-                    <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
-                      selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
-                      compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
-                    /> :
-                    <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
-                  }
-                </Tab.Pane>
-              )
-            },
-          },
-          {
-            menuItem: <Menu.Item as={Link} to='/stations' key='stations'>Stations</Menu.Item>,
-            render: () => {
-              return (
-                <Tab.Pane attached={false}>
-                  <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
-                    selectedDate={selectedDate} selectedDateObj={selectedDateObj}
-                    compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj} />
-                </Tab.Pane>
-              )
-            },
-          },
-        ]
-      }/>
+      <Menu pointing secondary>
+        <Menu.Item as={Link} to='/' key='system' active={index === 0}>System</Menu.Item>
+        <Menu.Item as={Link} to='/stations' key='stations' active={index === 1}>Stations</Menu.Item>
+      </Menu>
     )
   }
 
-  render() {
+  renderSystemWideDetails() {
     const {
       nyct,
       sir,
@@ -114,28 +71,25 @@ class OverallDetails extends React.Component {
       durationMode,
       isMobile,
       selectedDate,
+      compareWithDate,
       firstYear,
       lastYear,
-      handleToggle,
       handleGraphClick,
       handleYearChange,
     } = this.props;
     const { width, height } = this.state;
+    const data = this.combinedDetails();
     const selectedYear = moment(selectedDate).year();
     return (
-      <div className='overall-details'>
+      <>
         {
-          this.checkboxes().map((c) => {
-            return (
-              <Checkbox label={c.label} name={c.field} checked={this.props[c.field]} key={c.field} onChange={handleToggle} />
-            )
-          })
+          compareWithDate ?
+          <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
+            selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
+            compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
+          /> :
+          <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
         }
-        <Divider className='tab-separator' />
-        <Switch>
-          <Route exact path='/stations' render={() => this.renderTab(1)} />
-          <Route render={() => this.renderTab(0)} />
-        </Switch>
         <Divider horizontal>
           <Header size='medium' className='details-graph-header'>
             <div>
@@ -157,7 +111,45 @@ class OverallDetails extends React.Component {
         <div>
           <OverallGraph isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} durationMode={durationMode}
             handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
-         </div>
+        </div>
+      </>
+    )
+  }
+
+  render() {
+    const {
+      nyct,
+      sir,
+      rit,
+      pth,
+      jfk,
+      selectedDate,
+      handleToggle,
+      mode,
+      selectedDateObj,
+      compareWithDate,
+      compareWithDateObj,
+    } = this.props;
+    return (
+      <div className='overall-details'>
+        {
+          this.checkboxes().map((c) => {
+            return (
+              <Checkbox label={c.label} name={c.field} checked={this.props[c.field]} key={c.field} onChange={handleToggle} />
+            )
+          })
+        }
+        <Divider className='tab-separator' />
+        <Switch>
+          <Route exact path='/stations' render={() => this.renderTab(1)} />
+          <Route render={() => this.renderTab(0)} />
+        </Switch>
+        <Switch>
+          <Route exact path='/stations' render={() => <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
+                    selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+                    compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj} />} />
+          <Route render={() => this.renderSystemWideDetails()} />
+        </Switch>
       </div>
     )
   }

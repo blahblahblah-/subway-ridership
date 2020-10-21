@@ -49,7 +49,7 @@ class StationList extends React.Component {
     const { query } = this.state;
     const systems = {NYCT: nyct, SIR: sir, RIT: rit, PTH: pth, JFK: jfk };
 
-    if (!selectedDateObj) {
+    if (!selectedDateObj || (compareWithDate && !compareWithDateObj)) {
       return;
     }
 

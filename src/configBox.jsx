@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Segment, Header, Form, Menu, Checkbox, Divider, Button, Icon } from "semantic-ui-react";
+import { Grid, Segment, Header, Form, Menu, Checkbox, Divider, Button, Icon, Dropdown } from "semantic-ui-react";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
@@ -100,7 +100,7 @@ class ConfigBox extends React.Component {
   }
 
   render() {
-    const { durationMode, mode, isMobile, handleModeClick, handleDurationModeClick, compareWithAnotherDate,
+    const { durationMode, mode, isMobile, handleModeClick, handleDurationModeClick, compareWithAnotherDate, compareMode, handleCompareModeChange,
       handleToggle, handleDateInputChange, handleToggleDataBox, handleCompareDateInputChange } = this.props;
     return (
       <Segment inverted vertical className="configbox">
@@ -135,7 +135,19 @@ class ConfigBox extends React.Component {
             </Grid.Row>
             <Grid.Row style={{ padding: 0 }}>
               <Grid.Column style={{ lineHeight: '30px'}}>
-                <Checkbox label={isMobile ? 'Compare' : 'Compare with'} name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />
+                <Checkbox label={isMobile ? 'Compare' : 'Compare with'} name='compareWithAnotherDate' checked={compareWithAnotherDate} onChange={handleToggle} />&nbsp;
+                <Dropdown
+                  name='compareMode'
+                  options={
+                    [
+                      { key: 'percentOf', text: 'as % of', value: 'percentOf'},
+                      { key: 'diffPercent', text: 'as diff in % w/', value: 'diffPercent'},
+                    ]
+                  }
+                  onChange={handleCompareModeChange}
+                  value={compareMode}
+                  disabled={!compareWithAnotherDate}
+                />
               </Grid.Column>
               <Grid.Column style={{ paddingLeft: 0 }}>
                 {

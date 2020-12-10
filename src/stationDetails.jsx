@@ -104,6 +104,7 @@ class StationDetails extends React.Component {
       selectedDate,
       durationMode,
       compareWithDate,
+      compareMode,
       stationId,
       firstYear,
       lastYear,
@@ -158,7 +159,7 @@ class StationDetails extends React.Component {
             {
               compareWithDate ?
                 <DetailsCompareDates isMobile={isMobile} selectedDate={selectedDate} selectedDateObj={selectedStationObj[selectedDate]} durationMode={durationMode}
-                compareWithDate={compareWithDate} compareWithDateObj={selectedStationObj[compareWithDate]} /> :
+                compareWithDate={compareWithDate} compareMode={compareMode} compareWithDateObj={selectedStationObj[compareWithDate]} /> :
                 <DetailsDate isMobile={isMobile} data={selectedStationObj[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
             }
             <Divider horizontal>

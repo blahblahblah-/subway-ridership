@@ -72,6 +72,7 @@ class OverallDetails extends React.Component {
       isMobile,
       selectedDate,
       compareWithDate,
+      compareMode,
       firstYear,
       lastYear,
       handleGraphClick,
@@ -86,7 +87,7 @@ class OverallDetails extends React.Component {
           compareWithDate ?
           <DetailsCompareDates isMobile={isMobile} durationMode={durationMode}
             selectedDate={selectedDate} selectedDateObj={data[selectedDate]}
-            compareWithDate={compareWithDate} compareWithDateObj={data[compareWithDate]}
+            compareWithDate={compareWithDate} compareMode={compareMode} compareWithDateObj={data[compareWithDate]}
           /> :
           <DetailsDate isMobile={isMobile} data={data[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
         }

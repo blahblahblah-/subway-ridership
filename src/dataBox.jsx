@@ -31,6 +31,7 @@ class DataBox extends React.Component {
       mode,
       selectedDate,
       selectedDateObj,
+      compareMode,
       compareWithDate,
       compareWithDateObj,
       firstYear,
@@ -54,6 +55,7 @@ class DataBox extends React.Component {
                   return (
                     <StationDetails isMobile={isMobile}
                       selectedDate={selectedDate} durationMode={durationMode} stationId={props.match.params.stationId}
+                      compareMode={compareMode}
                       compareWithDate={compareWithDate}
                       firstYear={firstYear} lastYear={lastYear}
                       handleYearChange={handleYearChange}
@@ -66,6 +68,7 @@ class DataBox extends React.Component {
               <Route exact path={['/', '/stations']} render={() => (
                 <OverallDetails isMobile={isMobile} nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} durationMode={durationMode}
                   selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+                  compareMode={compareMode}
                   compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj}
                   firstYear={firstYear} lastYear={lastYear}
                   handleYearChange={handleYearChange}

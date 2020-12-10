@@ -29,6 +29,7 @@ class Mapbox extends React.Component {
       selectedDateObj: null,
       durationMode: 'days',
       mode: 'entries',
+      compareMode: 'percentOf',
       compareWithAnotherDate: false,
       compareWithDate: moment(lastDate).subtract(52, 'week').format('YYYY-MM-DD'),
       compareWithDateObj: null,
@@ -65,14 +66,17 @@ class Mapbox extends React.Component {
     });
   }
 
-  getPassengerData(dateObj, compareWithAnotherDate, compareDateObj, fieldName, complexId) {
+  getPassengerData(dateObj, compareWithAnotherDate, compareMode, compareDateObj, fieldName, complexId) {
     if (!compareWithAnotherDate) {
       return dateObj[complexId][fieldName];
     }
     if (!dateObj[complexId] || !compareDateObj[complexId]) {
       return 0;
     }
-    return ((dateObj[complexId][fieldName] - compareDateObj[complexId][fieldName]) / compareDateObj[complexId][fieldName]) * 100
+    if (compareMode === 'percentOf') {
+      return (dateObj[complexId][fieldName] / compareDateObj[complexId][fieldName]) * 100;
+    }
+    return ((dateObj[complexId][fieldName] - compareDateObj[complexId][fieldName]) / compareDateObj[complexId][fieldName]) * 100;
   }
 
   refreshMap() {
@@ -95,6 +99,7 @@ class Mapbox extends React.Component {
     const {
       selectedDateObj,
       compareWithAnotherDate,
+      compareMode,
       compareWithDateObj,
       durationMode,
       mode,
@@ -117,8 +122,8 @@ class Mapbox extends React.Component {
             "type": "Feature",
             "properties": {
               "id": s,
-              "entries": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareWithDateObj, "entries", s),
-              "exits": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareWithDateObj, "exits", s),
+              "entries": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareMode, compareWithDateObj, "entries", s),
+              "exits": this.getPassengerData(selectedDateObj, compareWithAnotherDate, compareMode, compareWithDateObj, "exits", s),
               "system": stations[s].system,
             },
             "geometry": {
@@ -166,7 +171,7 @@ class Mapbox extends React.Component {
 
     let circleColorValue = '#54c8ff';
 
-    if (compareWithAnotherDate) {
+    if (compareWithAnotherDate && compareMode === 'diffPercent') {
       circleColorValue = [
         'case', ['>=', ['get', mode], 0], '#21ba45', '#db2828'
       ];
@@ -268,6 +273,10 @@ class Mapbox extends React.Component {
     }
   }
 
+  handleCompareModeChange = (e, { name, value }) => {
+    this.setState({ compareMode: value }, this.refreshMap);
+  };
+
   handleToggleDataBox = () => {
     this.setState({ isDataBoxVisible: !this.state.isDataBoxVisible });
   }
@@ -328,6 +337,7 @@ class Mapbox extends React.Component {
       durationMode,
       mode,
       compareWithAnotherDate,
+      compareMode,
       compareWithDate,
       compareWithDateObj,
       nyct,
@@ -342,13 +352,15 @@ class Mapbox extends React.Component {
         </div>
         <ConfigBox mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
           isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
-          compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
+          compareWithAnotherDate={compareWithAnotherDate} compareMode={compareMode} handleCompareModeChange={this.handleCompareModeChange}
+          handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
           handleDateInputChange={this.handleDateInputChange} handleCompareDateInputChange={this.handleCompareDateInputChange} />
         { (!isMobile || isDataBoxVisible) &&
           <DataBox nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode} durationMode={durationMode}
             isMobile={isMobile}
             selectedDate={selectedDate} selectedDateObj={selectedDateObj}
-            compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
+            compareWithDate={compareWithAnotherDate && compareWithDate} compareMode={compareWithAnotherDate && compareMode}
+            compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
             firstYear={firstYear} lastYear={lastYear} handleToggle={this.handleToggle} isDataLoaded={isDataLoaded}
             handleYearChange={this.handleYearChange}
             handleStationChange={this.handleStationChange} handleGraphClick={this.handleGraphClick} />

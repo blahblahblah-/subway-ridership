@@ -129,6 +129,7 @@ class OverallDetails extends React.Component {
       mode,
       selectedDateObj,
       compareWithDate,
+      compareMode,
       compareWithDateObj,
     } = this.props;
     return (
@@ -148,7 +149,7 @@ class OverallDetails extends React.Component {
         <Switch>
           <Route exact path='/stations' render={() => <StationList nyct={nyct} sir={sir} rit={rit} pth={pth} jfk={jfk} mode={mode}
                     selectedDate={selectedDate} selectedDateObj={selectedDateObj}
-                    compareWithDate={compareWithDate} compareWithDateObj={compareWithDateObj} />} />
+                    compareWithDate={compareWithDate} compareMode={compareMode} compareWithDateObj={compareWithDateObj} />} />
           <Route render={() => this.renderSystemWideDetails()} />
         </Switch>
       </div>

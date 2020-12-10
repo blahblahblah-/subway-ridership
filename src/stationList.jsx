@@ -16,17 +16,20 @@ class StationList extends React.Component {
   }
 
   getData(station) {
-    const { selectedDateObj, compareWithDate, compareWithDateObj, mode } = this.props;
+    const { selectedDateObj, compareWithDate, compareMode, compareWithDateObj, mode } = this.props;
     if (!compareWithDate) {
       return selectedDateObj[station][mode];
     }
     const compareWith = compareWithDateObj[station][mode];
     const selected = selectedDateObj[station][mode];
+    if (compareMode === 'percentOf') {
+      return selected / compareWith;
+    }
     return (selected - compareWith) / compareWith;
   }
 
   renderData(data) {
-    const { compareWithDate } = this.props;
+    const { compareWithDate, compareMode } = this.props;
 
     if (!compareWithDate) {
       return (
@@ -36,6 +39,14 @@ class StationList extends React.Component {
       )
     }
 
+    if (compareMode === 'percentOf') {
+      const className = data >= 1 ? 'data green' : ' data red';
+      return (
+        <List.Content floated='right' className={className}>
+          { Math.round(data * 10000) / 100}%
+        </List.Content>
+      )
+    }
     const className = data >= 0 ? 'data green' : ' data red';
     return (
       <List.Content floated='right' className={className}>
@@ -45,7 +56,7 @@ class StationList extends React.Component {
   }
 
   renderListItems() {
-    const { nyct, sir, rit, pth, jfk, selectedDateObj, compareWithDate, compareWithDateObj } = this.props;
+    const { nyct, sir, rit, pth, jfk, selectedDateObj, compareWithDate, compareMode, compareWithDateObj } = this.props;
     const { query } = this.state;
     const systems = {NYCT: nyct, SIR: sir, RIT: rit, PTH: pth, JFK: jfk };
 
@@ -61,7 +72,7 @@ class StationList extends React.Component {
         data: this.getData(station)
       }
     }).sort((a, b) => {
-      if (compareWithDate) {
+      if (compareWithDate && compareMode === 'diffPercent') {
         return a.data - b.data;
       }
       return b.data - a.data;

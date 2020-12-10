@@ -162,11 +162,19 @@ class Mapbox extends React.Component {
     ];
 
     if (compareWithAnotherDate) {
-      circleRadiusValue = [
-        'interpolate', ['linear'], ['zoom'],
-        10, ['max', ['min', ['abs', ['/', ['get', mode], 10]], 20], 3],
-        14, ['max', ['min', ['abs', ['/', ['get', mode], 5]], 50], 5]
-      ];
+      if (compareMode === 'percentOf') {
+        circleRadiusValue = [
+          'interpolate', ['linear'], ['zoom'],
+          10, ['max', ['min', ['abs', ['/', ['get', mode], 5]], 40], 3],
+          14, ['max', ['min', ['abs', ['/', ['get', mode], 2]], 100], 5]
+        ];
+      } else {
+        circleRadiusValue = [
+          'interpolate', ['linear'], ['zoom'],
+          10, ['max', ['min', ['abs', ['/', ['get', mode], 10]], 20], 3],
+          14, ['max', ['min', ['abs', ['/', ['get', mode], 5]], 50], 5]
+        ];
+      }
     }
 
     let circleColorValue = '#54c8ff';

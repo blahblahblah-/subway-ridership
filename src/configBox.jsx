@@ -140,8 +140,8 @@ class ConfigBox extends React.Component {
                   name='compareMode'
                   options={
                     [
-                      { key: 'percentOf', text: 'as % of', value: 'percentOf'},
-                      { key: 'diffPercent', text: 'as diff in % w/', value: 'diffPercent'},
+                      { key: 'percentOf', text: isMobile ? '% of' : 'as % of', value: 'percentOf'},
+                      { key: 'diffPercent', text: 'diff %', value: 'diffPercent'},
                     ]
                   }
                   onChange={handleCompareModeChange}

@@ -1,5 +1,6 @@
 import React from 'react';
 import Mapbox from './mapbox.jsx'
+import { Message } from "semantic-ui-react";
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Helmet } from "react-helmet";
 
@@ -22,6 +23,12 @@ function App() {
         <meta property="og:description" content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage." />
         <meta name="twitter:description" content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage." />
       </Helmet>
+      <Message color='black' className='toast'>
+        <Message.Header>A note about the dataset</Message.Header>
+        <p>
+          This site uses MTA's turnstile usage dataset, which currently does not track OMNY taps for entries. Considering using exit numbers to infer ridership instead.
+        </p>
+      </Message>
       <Mapbox />
     </Router>
   );

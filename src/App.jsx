@@ -26,7 +26,8 @@ function App() {
       <Message color='black' className='toast'>
         <Message.Header>A note about the dataset</Message.Header>
         <p>
-          This site uses MTA's turnstile usage dataset, which currently does not track OMNY taps for entries. Considering using exit numbers to infer ridership instead.
+          This site uses MTA's turnstile usage dataset, which currently <a href="https://groups.google.com/g/mtadeveloperresources/c/UaMktsBMjX8" target="_blank">
+          does not track OMNY taps</a> for entries. Considering using exit numbers to infer ridership instead.
         </p>
       </Message>
       <Mapbox />

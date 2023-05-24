@@ -3,6 +3,8 @@
 ## Sunsetting notice
 This project was built around a dataset that [excludes OMNY taps](https://groups.google.com/g/mtadeveloperresources/c/UaMktsBMjX8). It is now outdated, and has outlived its usefulness. There are no plans to rebuild it with the new dataset, and this project is no longer maintained.
 
+---
+
 A frontend-only React app, providing visualization of daily NYC Subway ridership and trends using turnstiles data, inspired by wanting to see the impact of COVID-19 on transit usage. Heavily relies on aggregated daily turnstiles data by [qri](https://qri.cloud). Some front-end elements sampled from [The Weekendest](https://github.com/blahblahblah-/theweekendest/) and [goodservice.io](https://github.com/blahblahblah-/goodservice).
 
 Project was started with using [Create React App](https://create-react-app.dev/docs/getting-started/). Uses [Mapbox](https://www.mapbox.com) for maps, [Semantic UI React](https://react.semantic-ui.com/) for UI elements, [Nivo](https://nivo.rocks/) for graphs.

@@ -24,10 +24,10 @@ function App() {
         <meta name="twitter:description" content="Visualization of NYC Subway daily ridership using MTA turnstile usage data, updated weekly. See the effects of the Covid-19 pandemic on transit usage." />
       </Helmet>
       <Message color='black' className='toast'>
-        <Message.Header>A note about the dataset</Message.Header>
+        <Message.Header>Sunsetting Notice</Message.Header>
         <p>
-          This site uses MTA's turnstile usage dataset, which currently <a href="https://groups.google.com/g/mtadeveloperresources/c/UaMktsBMjX8" target="_blank">
-          does not track OMNY taps</a> for entries. Considering using exit numbers to infer ridership instead.
+          This project was built around a dataset that <a href="https://groups.google.com/g/mtadeveloperresources/c/UaMktsBMjX8" target="_blank">
+          excludes OMNY taps</a>. It is now outdated, and has outlived its usefulness. There are no plans to rebuild it with the new dataset, and this site is no longer maintained.
         </p>
       </Message>
       <Mapbox />
